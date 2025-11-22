@@ -1,1 +1,0 @@
-import{la as e,o,s as r,va as i}from"./chunk-ZXFXI32P.js";var m=[{path:"",redirectTo:"dashboard",pathMatch:"full"}],n=(()=>{class t{static{this.\u0275fac=function(s){return new(s||t)}}static{this.\u0275mod=r({type:t})}static{this.\u0275inj=o({imports:[e,i.forChild(m)]})}}return t})();export{n as CustomerModule};

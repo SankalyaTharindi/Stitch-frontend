@@ -15,6 +15,7 @@ export class LoginComponent {
   error = '';
   returnUrl: string = '';
   activeTab: 'signin' | 'signup' = 'signin';
+  showModal = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -40,6 +41,21 @@ export class LoginComponent {
   setActiveTab(tab: 'signin' | 'signup'): void {
     this.activeTab = tab;
     this.error = '';
+  }
+
+  openModal(tab: 'signin' | 'signup'): void {
+    this.activeTab = tab;
+    this.showModal = true;
+    this.error = '';
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeModal(): void {
+    this.showModal = false;
+    this.error = '';
+    this.loginForm.reset();
+    this.registerForm.reset();
+    document.body.style.overflow = '';
   }
 
   onSubmit(): void {

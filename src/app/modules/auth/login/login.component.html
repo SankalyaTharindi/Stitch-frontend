@@ -1,13 +1,50 @@
 <div class="auth-container">
-  <div class="auth-wrapper">
-    <div class="brand-section">
-      <h1 class="brand-title">Stitch</h1>
-      <p class="brand-subtitle">Elegance in Every Thread</p>
+  <!-- Header with Brand and Auth Buttons -->
+  <header class="auth-header">
+    <h1 class="brand-title">Stitch</h1>
+    <div class="auth-buttons">
+      <button class="btn-auth" (click)="openModal('signin')">Sign In</button>
+      <button class="btn-auth btn-primary-outline" (click)="openModal('signup')">Sign Up</button>
     </div>
+  </header>
 
-    <div class="auth-boxes">
-      <!-- Sign In Box -->
-      <div class="auth-box" [class.active]="activeTab === 'signin'" (click)="setActiveTab('signin')">
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="hero-section">
+      <h2 class="tagline">Elegance in Every Thread</h2>
+      <p class="description">
+        Experience the art of bespoke tailoring with our exclusive appointment system. 
+        Schedule your consultation with our master craftsmen and bring your vision to life.
+      </p>
+      
+      <div class="features">
+        <div class="feature-card">
+          <div class="feature-icon">📅</div>
+          <h3>Easy Booking</h3>
+          <p>Schedule appointments at your convenience with our intuitive booking system</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">✂️</div>
+          <h3>Expert Craftsmanship</h3>
+          <p>Work with experienced tailors who bring decades of expertise to every stitch</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">🥻</div>
+          <h3>Custom Designs</h3>
+          <p>From formal wear to casual elegance, we create pieces that reflect your style</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Overlay -->
+  <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <!-- Sign In Form -->
+      <div class="auth-box" *ngIf="activeTab === 'signin'">
+        <button class="close-btn" (click)="closeModal()">&times;</button>
         <div class="box-header">
           <h2>Sign In</h2>
           <p>Welcome back to luxury</p>
@@ -51,8 +88,10 @@
         </form>
       </div>
 
-      <!-- Sign Up Box -->
-      <div class="auth-box" [class.active]="activeTab === 'signup'" (click)="setActiveTab('signup')">
+      
+      <!-- Sign Up Form -->
+      <div class="auth-box" *ngIf="activeTab === 'signup'">
+        <button class="close-btn" (click)="closeModal()">&times;</button>
         <div class="box-header">
           <h2>Sign Up</h2>
           <p>Join our exclusive experience</p>
