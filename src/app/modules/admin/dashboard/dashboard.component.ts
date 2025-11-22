@@ -78,4 +78,29 @@ export class AdminDashboardComponent implements OnInit {
       });
     }
   }
+
+  getPendingCount(): number {
+    return this.appointments.filter(apt => apt.status === 'PENDING').length;
+  }
+
+  getApprovedCount(): number {
+    return this.appointments.filter(apt => apt.status === 'APPROVED').length;
+  }
+
+  getCompletedCount(): number {
+    return this.appointments.filter(apt => apt.status === 'COMPLETED').length;
+  }
+
+  getUpcomingDeadlines(): Appointment[] {
+    const today = new Date();
+    const nextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
+    
+    return this.appointments
+      .filter(apt => {
+        const deadline = new Date(apt.deadline);
+        return deadline >= today && deadline <= nextWeek && apt.status !== 'COMPLETED';
+      })
+      .sort((a, b) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime())
+      .slice(0, 5);
+  }
 }
