@@ -1,0 +1,23 @@
+<div class="dashboard-container">
+  <h1>Welcome, {{ currentUser?.fullName }}!</h1>
+  
+  <div class="dashboard-grid">
+    <div class="card">
+      <h2>Book Appointment</h2>
+      <p>Schedule a new appointment with us</p>
+      <button routerLink="/customer/book-appointment">Book Now</button>
+    </div>
+
+    <div class="card">
+      <h2>My Appointments</h2>
+      <p>View and manage your appointments</p>
+      <button routerLink="/customer/my-appointments">View Appointments</button>
+    </div>
+
+    <div class="card">
+      <h2>Gallery</h2>
+      <p>Browse our work and get inspired</p>
+      <button routerLink="/customer/gallery">View Gallery</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,131 @@
+<div class="auth-container">
+  <div class="auth-wrapper">
+    <div class="brand-section">
+      <h1 class="brand-title">Stitch</h1>
+      <p class="brand-subtitle">Elegance in Every Thread</p>
+    </div>
+
+    <div class="auth-boxes">
+      <!-- Sign In Box -->
+      <div class="auth-box" [class.active]="activeTab === 'signin'" (click)="setActiveTab('signin')">
+        <div class="box-header">
+          <h2>Sign In</h2>
+          <p>Welcome back to luxury</p>
+        </div>
+        
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" (click)="$event.stopPropagation()" *ngIf="activeTab === 'signin'">
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input 
+              type="email" 
+              id="email" 
+              formControlName="email" 
+              placeholder="your@email.com"
+              [class.invalid]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+            />
+            <div class="error" *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+              <span *ngIf="loginForm.get('email')?.errors?.['required']">Email is required</span>
+              <span *ngIf="loginForm.get('email')?.errors?.['email']">Please enter a valid email address</span>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input 
+              type="password" 
+              id="password" 
+              formControlName="password" 
+              placeholder="Enter your password"
+              [class.invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+            />
+            <div class="error" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+              <span *ngIf="loginForm.get('password')?.errors?.['required']">Password is required</span>
+            </div>
+          </div>
+
+          <div class="error" *ngIf="error">{{ error }}</div>
+
+          <button type="submit" class="btn-primary" [disabled]="loading || loginForm.invalid">
+            {{ loading ? 'Signing In...' : 'Sign In' }}
+          </button>
+        </form>
+      </div>
+
+      <!-- Sign Up Box -->
+      <div class="auth-box" [class.active]="activeTab === 'signup'" (click)="setActiveTab('signup')">
+        <div class="box-header">
+          <h2>Sign Up</h2>
+          <p>Join our exclusive experience</p>
+        </div>
+        
+        <form [formGroup]="registerForm" (ngSubmit)="onRegister()" (click)="$event.stopPropagation()" *ngIf="activeTab === 'signup'">
+          <div class="form-group">
+            <label for="fullName">Full Name</label>
+            <input 
+              type="text" 
+              id="fullName" 
+              formControlName="fullName" 
+              placeholder="Your full name"
+              [class.invalid]="registerForm.get('fullName')?.invalid && registerForm.get('fullName')?.touched"
+            />
+            <div class="error" *ngIf="registerForm.get('fullName')?.invalid && registerForm.get('fullName')?.touched">
+              <span *ngIf="registerForm.get('fullName')?.errors?.['required']">Full name is required</span>
+              <span *ngIf="registerForm.get('fullName')?.errors?.['minlength']">Name must be at least 2 characters</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="signupEmail">Email Address</label>
+            <input 
+              type="email" 
+              id="signupEmail" 
+              formControlName="email" 
+              placeholder="your@email.com"
+              [class.invalid]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched"
+            />
+            <div class="error" *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
+              <span *ngIf="registerForm.get('email')?.errors?.['required']">Email is required</span>
+              <span *ngIf="registerForm.get('email')?.errors?.['email']">Please enter a valid email address</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="phoneNumber">Phone Number</label>
+            <input 
+              type="tel" 
+              id="phoneNumber" 
+              formControlName="phoneNumber" 
+              placeholder="Your phone number"
+              [class.invalid]="registerForm.get('phoneNumber')?.invalid && registerForm.get('phoneNumber')?.touched"
+            />
+            <div class="error" *ngIf="registerForm.get('phoneNumber')?.invalid && registerForm.get('phoneNumber')?.touched">
+              <span *ngIf="registerForm.get('phoneNumber')?.errors?.['required']">Phone number is required</span>
+              <span *ngIf="registerForm.get('phoneNumber')?.errors?.['pattern']">Please enter a valid phone number</span>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="signupPassword">Password</label>
+            <input 
+              type="password" 
+              id="signupPassword" 
+              formControlName="password" 
+              placeholder="Create a password"
+              [class.invalid]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
+            />
+            <div class="error" *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
+              <span *ngIf="registerForm.get('password')?.errors?.['required']">Password is required</span>
+              <span *ngIf="registerForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters</span>
+            </div>
+          </div>
+
+          <div class="error" *ngIf="error">{{ error }}</div>
+
+          <button type="submit" class="btn-primary" [disabled]="loading || registerForm.invalid">
+            {{ loading ? 'Creating Account...' : 'Create Account' }}
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
