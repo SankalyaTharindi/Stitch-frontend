@@ -1,0 +1,93 @@
+<div class="appointments-section">
+  <h2 class="section-title">My Appointments</h2>
+
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Loading appointments...</p>
+  </div>
+
+  <div *ngIf="!loading">
+    <!-- Current Appointments -->
+    <div class="subsection" *ngIf="currentAppointments.length > 0">
+      <h3>Current Appointments</h3>
+      <div class="appointments-grid">
+        <div class="appointment-card" *ngFor="let appointment of currentAppointments">
+          <div class="card-header" [style.border-left-color]="getStatusColor(appointment.status)">
+            <div class="status-badge" [style.background-color]="getStatusColor(appointment.status)">
+              {{ appointment.status }}
+            </div>
+          </div>
+          
+          <div class="card-body">
+            <div class="info-row">
+              <span class="material-icons">event</span>
+              <div class="info-content">
+                <span class="label">Deadline</span>
+                <span class="value">{{ appointment.deadline | date:'medium' }}</span>
+              </div>
+            </div>
+            
+            <div class="info-row">
+              <span class="material-icons">phone</span>
+              <div class="info-content">
+                <span class="label">Contact</span>
+                <span class="value">{{ appointment.phoneNumber }}</span>
+              </div>
+            </div>
+
+            <div class="info-row" *ngIf="appointment.notes">
+              <span class="material-icons">notes</span>
+              <div class="info-content">
+                <span class="label">Notes</span>
+                <span class="value">{{ appointment.notes }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-actions" *ngIf="appointment.status === 'PENDING'">
+            <button class="btn-edit" (click)="onEdit(appointment)">
+              <span class="material-icons">edit</span>
+              Edit
+            </button>
+            <button class="btn-cancel" (click)="onCancel(appointment.id!)">
+              <span class="material-icons">cancel</span>
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Past Appointments -->
+    <div class="subsection" *ngIf="pastAppointments.length > 0">
+      <h3>Past Appointments</h3>
+      <div class="appointments-grid">
+        <div class="appointment-card past" *ngFor="let appointment of pastAppointments">
+          <div class="card-header" [style.border-left-color]="getStatusColor(appointment.status)">
+            <div class="status-badge completed">
+              {{ appointment.status }}
+            </div>
+            <span class="appointment-id">#{{ appointment.id }}</span>
+          </div>
+          
+          <div class="card-body">
+            <div class="info-row">
+              <span class="material-icons">event</span>
+              <div class="info-content">
+                <span class="label">Completed On</span>
+                <span class="value">{{ appointment.deadline | date:'medium' }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="appointments.length === 0">
+      <span class="material-icons empty-icon">event_busy</span>
+      <h3>No Appointments Yet</h3>
+      <p>Book your first appointment to get started!</p>
+    </div>
+  </div>
+</div>

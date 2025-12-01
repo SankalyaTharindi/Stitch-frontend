@@ -1,54 +1,10 @@
-:host{display:block;min-height:100vh;background:#12010a;color:#f8f5ff;font-family:system-ui,sans-serif}
+:host{display:block;min-height:100vh;background:linear-gradient(135deg,rgba(45,1,12,.95),rgba(44,1,14,.95));;color:#f8f5ff;font-family:system-ui,sans-serif}
 .admin-layout{display:flex;min-height:100vh}
-.dashboard-container{flex:1;max-width:1200px;padding:24px;margin:0 auto}
+.dashboard-container{flex:1;max-width:1200px;padding:24px;margin:0 auto;margin-left:260px}
 .top-bar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:24px}
-.dashboard-header{display:flex;flex-direction:column;gap:6px}
+.dashboard-header{display:flex;flex-direction:column;gap:6px;color:#d4af37}
 .dashboard-header h1{font-size:28px;font-weight:700}
 .header-actions{display:flex;gap:12px}
 .notification-btn{position:relative;border:none;border-radius:999px;padding:8px 12px;background:rgba(5,2,10,.8);color:#f6e7c1;display:inline-flex;cursor:pointer}
 .badge{position:absolute;top:-4px;right:-2px;min-width:18px;height:18px;padding:0 4px;border-radius:999px;background:#e63946;color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center}
-
-.stats-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-bottom:24px}
-
-.stat-card{background:rgba(5,2,10,.85);padding:16px 18px;border-radius:14px;display:flex;align-items:center;gap:14px;border:1px solid rgba(246,231,193,.18)}
-
-.stat-icon{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(10,6,18,.9)}.stat-icon .material-icons{font-size:32px;color:#f6e7c1}
-.stat-content h3{font-size:1.4rem;font-weight:700;margin:0 0 4px}
-.stat-content p{margin:0;font-size:.85rem;color:#c3b6e6}
-.section{background:rgba(5,2,10,.9);border-radius:14px;padding:20px;margin-bottom:20px;border:1px solid rgba(246,231,193,.18)}
-.section h2{font-size:1.3rem;margin:0 0 16px;color:#f6e7c1}
-.section-header{display:flex;justify-content:space-between;margin-bottom:12px}
-.filters select{padding:.6rem 1rem;border:1px solid rgba(246,231,193,.3);border-radius:8px;background:rgba(6,2,12,.9);color:#f8f5ff;font-size:.9rem}
-.upcoming-deadlines .deadline-list{display:grid;gap:10px}
-.upcoming-deadlines .deadline-card{display:flex;gap:12px;padding:12px;background:rgba(10,6,18,.9);border-radius:10px;border-left:3px solid #d4af37}
-.upcoming-deadlines .deadline-date{display:flex;flex-direction:column;align-items:center;background:rgba(5,2,12,.9);border-radius:8px;padding:8px;min-width:70px}
-.deadline-date .date{font-size:1.8rem;font-weight:700;color:#f8f5ff}
-.deadline-date .month{font-size:.85rem;color:#c3b6e6}
-.upcoming-deadlines .deadline-info{flex:1}
-.deadline-info h4{margin:0 0 .25rem;color:#f8f5ff;font-size:1.1rem}
-.deadline-info p{margin:0;color:#c3b6e6;font-size:.9rem}
-.status-badge{padding:.25rem .75rem;border-radius:8px;font-size:.8rem;font-weight:600}
-.status-badge.status-pending{background:#fff3cd;color:#856404}
-.status-badge.status-approved{background:#d4edda;color:#155724}
-.appointments-list{display:grid;gap:1.5rem}
-.appointment-card{background:#f8f9fa;padding:1.5rem;border-radius:12px;border:1px solid #e9ecef}
-.appointment-header{display:flex;justify-content:space-between;margin-bottom:1rem;padding-bottom:1rem;border-bottom:2px solid #e9ecef}
-.customer-info h3{margin:0;color:#2d010c;font-size:1.2rem}
-.customer-info .phone{margin:0;color:#6c757d;font-size:.9rem}
-.status{padding:.25rem .75rem;border-radius:4px;font-size:.875rem;font-weight:500}
-.status.status-pending{background:#fff3cd;color:#856404}
-.status.status-approved{background:#d4edda;color:#155724}
-.status.status-in_progress{background:#d1ecf1;color:#0c5460}
-.status.status-completed{background:#d4edda;color:#155724}
-.appointment-details{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:1rem}
-.detail-item{display:flex;flex-direction:column;gap:.25rem}
-.detail-item.full-width{grid-column:1/-1}
-.detail-item .label{font-size:.85rem;color:#6c757d;font-weight:600}
-.detail-item .value{color:#333;font-size:.95rem}
-.appointment-actions{margin-top:1rem;display:flex;gap:1rem}
-.appointment-actions button{padding:.5rem 1rem;border:none;border-radius:4px;cursor:pointer}
-.btn-approve{background:#4CAF50;color:#fff}
-.btn-decline{background:#f44336;color:#fff}
-.no-appointments{text-align:center;padding:2rem}
-.loading{text-align:center;padding:2rem}
-@media(max-width:900px){.admin-layout{flex-direction:column}.stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:900px){.admin-layout{flex-direction:column}.dashboard-container{margin-left:0;padding-top:80px}}

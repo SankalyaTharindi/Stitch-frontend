@@ -1,0 +1,19 @@
+<nav class="customer-nav">
+  <div class="brand">
+    <h2 class="brand-title">Stitch</h2>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-item" [class.active]="isActive('/customer/dashboard')" (click)="navigate('/customer/dashboard')">
+      <span class="material-icons icon">dashboard</span>
+      <span>Dashboard</span>
+    </li>
+    <li class="nav-item" [class.active]="isActive('/customer/book-appointment')" (click)="navigate('/customer/book-appointment')">
+      <span class="material-icons icon">event_available</span>
+      <span>Book Appointment</span>
+    </li>
+    <li class="nav-item" [class.active]="isActive('/customer/gallery')" (click)="navigate('/customer/gallery')">
+      <span class="material-icons icon">collections</span>
+      <span>Gallery</span>
+    </li>
+  </ul>
+</nav>

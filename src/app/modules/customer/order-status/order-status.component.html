@@ -1,0 +1,32 @@
+<div class="order-status-section">
+  <h2 class="section-title">
+    <span class="material-icons">track_changes</span>
+    Real-Time Order Status
+  </h2>
+
+  <div class="status-tracker">
+    <div class="progress-bar">
+      <div class="progress-fill" [style.width.%]="getProgressPercentage()"></div>
+    </div>
+
+    <div class="status-steps">
+      <div class="status-step" 
+           *ngFor="let step of getStatusSteps()"
+           [class.active]="isStepActive(step.value)"
+           [class.current]="status === step.value">
+        <div class="step-icon">
+          <span class="material-icons">{{ step.icon }}</span>
+        </div>
+        <span class="step-label">{{ step.label }}</span>
+      </div>
+    </div>
+
+    <div class="deadline-info" *ngIf="deadline">
+      <span class="material-icons">event</span>
+      <div>
+        <span class="deadline-label">Expected Completion</span>
+        <span class="deadline-date">{{ deadline | date:'fullDate' }}</span>
+      </div>
+    </div>
+  </div>
+</div>

@@ -2,11 +2,11 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-sidebar',
-  templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.scss']
+  selector: 'app-customer-nav',
+  templateUrl: './customer-nav.component.html',
+  styleUrls: ['./customer-nav.component.scss']
 })
-export class SidebarComponent {
+export class CustomerNavComponent {
   constructor(private router: Router) {}
 
   isActive(route: string): boolean {

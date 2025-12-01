@@ -1,0 +1,74 @@
+<div class="admin-layout">
+  <app-shared-sidebar [title]="'Stitch Admin'" [navItems]="adminNavItems"></app-shared-sidebar>
+  
+  <div class="customers-container">
+    <div class="customers-section">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span class="material-icons">people</span>
+          Registered Customers
+        </h2>
+        <div class="search-box">
+          <span class="material-icons">search</span>
+          <input 
+            type="text" 
+            placeholder="Search customers..." 
+            [(ngModel)]="searchTerm" 
+            (input)="searchCustomers()">
+        </div>
+      </div>
+
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Loading customers...</p>
+  </div>
+
+  <div *ngIf="!loading && filteredCustomers.length > 0" class="customers-table">
+    <table>
+      <thead>
+        <tr>
+          <th>Full Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Appointments</th>
+          <th>Last Visit</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let customer of filteredCustomers">
+          <td>
+            <div class="customer-info">
+              <span class="material-icons avatar">account_circle</span>
+              <span class="name">{{ customer.fullName }}</span>
+            </div>
+          </td>
+          <td>{{ customer.email }}</td>
+          <td>{{ customer.phoneNumber || 'N/A' }}</td>
+          <td>
+            <span class="badge">{{ customer.appointmentCount || 0 }}</span>
+          </td>
+          <td>{{ customer.lastAppointmentDate ? (customer.lastAppointmentDate | date:'shortDate') : 'Never' }}</td>
+          <td>
+            <div class="actions">
+              <button class="btn-icon" title="View Details">
+                <span class="material-icons">visibility</span>
+              </button>
+              <button class="btn-icon btn-danger" title="Delete" (click)="deleteCustomer(customer.id!)">
+                <span class="material-icons">delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="!loading && filteredCustomers.length === 0" class="empty-state">
+    <span class="material-icons empty-icon">people_outline</span>
+    <h3>No Customers Found</h3>
+    <p>{{ searchTerm ? 'No customers match your search criteria.' : 'No registered customers yet.' }}</p>
+  </div>
+    </div>
+  </div>
+</div>

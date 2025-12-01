@@ -28,11 +28,11 @@ export class AppointmentService {
     if (imageFile) {
       formData.append('image', imageFile);
     }
-    return this.http.post<Appointment>(`${this.API_URL}/customer/appointments`, formData);
+    return this.http.post<Appointment>(`${this.API_URL}/appointments/customer`, formData);
   }
 
   getMyAppointments(): Observable<Appointment[]> {
-    return this.http.get<Appointment[]>(`${this.API_URL}/customer/appointments`);
+    return this.http.get<Appointment[]>(`${this.API_URL}/appointments/customer/my-appointments`);
   }
 
   // Admin endpoints
@@ -54,5 +54,18 @@ export class AppointmentService {
 
   updateAppointmentStatus(id: number, status: string): Observable<Appointment> {
     return this.http.put<Appointment>(`${this.API_URL}/admin/appointments/${id}/status`, { status });
+  }
+
+  updateAppointment(id: number, appointment: Appointment, imageFile?: File): Observable<Appointment> {
+    const formData = new FormData();
+    formData.append('appointment', new Blob([JSON.stringify(appointment)], { type: 'application/json' }));
+    if (imageFile) {
+      formData.append('image', imageFile);
+    }
+    return this.http.put<Appointment>(`${this.API_URL}/appointments/customer/${id}`, formData);
+  }
+
+  cancelAppointment(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.API_URL}/appointments/customer/${id}`);
   }
 }

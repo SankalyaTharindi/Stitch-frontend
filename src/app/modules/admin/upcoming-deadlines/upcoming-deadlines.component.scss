@@ -1,0 +1,13 @@
+.section{background:rgba(5,2,10,.9);border-radius:14px;padding:20px;margin-bottom:20px;border:1px solid rgba(246,231,193,.18)}
+.section h2{font-size:1.3rem;margin:0 0 16px;color:#f6e7c1}
+.upcoming-deadlines .deadline-list{display:grid;gap:10px}
+.upcoming-deadlines .deadline-card{display:flex;gap:12px;padding:12px;background:rgba(10,6,18,.9);border-radius:10px;border-left:3px solid #d4af37}
+.upcoming-deadlines .deadline-date{display:flex;flex-direction:column;align-items:center;background:rgba(5,2,12,.9);border-radius:8px;padding:8px;min-width:70px}
+.deadline-date .date{font-size:1.8rem;font-weight:700;color:#f8f5ff}
+.deadline-date .month{font-size:.85rem;color:#c3b6e6}
+.upcoming-deadlines .deadline-info{flex:1}
+.deadline-info h4{margin:0 0 .25rem;color:#f8f5ff;font-size:1.1rem}
+.deadline-info p{margin:0;color:#c3b6e6;font-size:.9rem}
+.status-badge{padding:.25rem .75rem;border-radius:8px;font-size:.8rem;font-weight:600}
+.status-badge.status-pending{background:#fff3cd;color:#856404}
+.status-badge.status-approved{background:#d4edda;color:#155724}

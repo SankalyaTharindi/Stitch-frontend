@@ -1,0 +1,18 @@
+<div class="section upcoming-deadlines" *ngIf="deadlines.length > 0">
+  <h2>Upcoming Deadlines</h2>
+  <div class="deadline-list">
+    <div class="deadline-card" *ngFor="let appointment of deadlines">
+      <div class="deadline-date">
+        <span class="date">{{ appointment.deadline | date:'dd' }}</span>
+        <span class="month">{{ appointment.deadline | date:'MMM' }}</span>
+      </div>
+      <div class="deadline-info">
+        <h4>{{ appointment.customerName }}</h4>
+        <p>{{ appointment.phoneNumber }}</p>
+        <span class="status-badge" [class]="'status-' + appointment.status.toLowerCase()">
+          {{ appointment.status }}
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

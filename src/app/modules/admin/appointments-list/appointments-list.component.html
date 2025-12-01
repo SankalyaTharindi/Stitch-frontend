@@ -1,0 +1,65 @@
+<div class="section">
+  <div class="section-header">
+    <h2>All Appointments</h2>
+    <div class="filters">
+      <select id="status-filter" [(ngModel)]="selectedStatus" (change)="onStatusChange()" title="Filter appointments by status">
+        <option *ngFor="let option of statusOptions" [value]="option.value">
+          {{ option.label }}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <div class="appointments-list" *ngIf="!loading; else loadingTemplate">
+    <div class="appointment-card" *ngFor="let appointment of appointments">
+      <div class="appointment-header">
+        <div class="customer-info">
+          <h3>{{ appointment.customerName }}</h3>
+          <p class="phone">{{ appointment.phoneNumber }}</p>
+        </div>
+        <span class="status" [class]="'status-' + appointment.status.toLowerCase()">
+          {{ appointment.status }}
+        </span>
+      </div>
+      
+      <div class="appointment-details">
+        <div class="detail-item">
+          <span class="label">Age:</span>
+          <span class="value">{{ appointment.age }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Deadline:</span>
+          <span class="value">{{ appointment.deadline | date:'medium' }}</span>
+        </div>
+        <div class="detail-item full-width" *ngIf="appointment.notes">
+          <span class="label">Notes:</span>
+          <span class="value">{{ appointment.notes }}</span>
+        </div>
+      </div>
+
+      <div class="appointment-actions" *ngIf="appointment.status === 'PENDING'">
+        <button class="btn-approve" (click)="onApprove(appointment.id!)">
+          ✓ Approve
+        </button>
+        <button class="btn-decline" (click)="onDecline(appointment.id!)">
+          ✕ Decline
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="appointments.length === 0" class="no-appointments">
+      <div class="empty-state">
+        <span class="material-icons empty-icon">event_busy</span>
+        <h3>No appointments found</h3>
+        <p>There are no {{ selectedStatus === 'ALL' ? '' : selectedStatus.toLowerCase() }} appointments at the moment.</p>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #loadingTemplate>
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>Loading appointments...</p>
+    </div>
+  </ng-template>
+</div>

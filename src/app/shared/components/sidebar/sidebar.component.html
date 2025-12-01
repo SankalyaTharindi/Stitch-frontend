@@ -1,0 +1,22 @@
+<aside class="sidebar">
+  <div class="sidebar-content">
+    <h2 class="sidebar-title">{{ title }}</h2>
+    <nav>
+      <ul class="nav-list">
+        <li *ngFor="let item of navItems" 
+            class="nav-item" 
+            [class.active]="isActive(item.route)" 
+            (click)="navigate(item.route)">
+          <span class="material-icons icon">{{ item.icon }}</span>
+          <span>{{ item.label }}</span>
+        </li>
+      </ul>
+    </nav>
+  </div>
+  <div class="sidebar-footer">
+    <button class="logout-btn" (click)="logout()">
+      <span class="material-icons icon">logout</span>
+      <span>Logout</span>
+    </button>
+  </div>
+</aside>

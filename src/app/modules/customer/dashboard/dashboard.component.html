@@ -1,23 +1,59 @@
-<div class="dashboard-container">
-  <h1>Welcome, {{ currentUser?.fullName }}!</h1>
-  
-  <div class="dashboard-grid">
-    <div class="card">
-      <h2>Book Appointment</h2>
-      <p>Schedule a new appointment with us</p>
-      <button routerLink="/customer/book-appointment">Book Now</button>
+<div class="customer-layout">
+  <!-- Navigation Sidebar -->
+  <app-shared-sidebar [title]="'Stitch'" [navItems]="customerNavItems"></app-shared-sidebar>
+
+  <!-- Main Content -->
+  <div class="dashboard-container">
+    <div class="top-bar">
+      <div class="dashboard-header">
+        <h1>Welcome, {{ currentUser?.fullName }}!</h1>
+      </div>
+      <div class="header-actions">
+        <button class="notification-btn" aria-label="View messages">
+          <span class="material-icons">mail</span>
+        </button>
+        <button class="notification-btn" aria-label="View notifications">
+          <span class="material-icons">notifications</span>
+          <span class="badge" *ngIf="appointments.length > 0">{{ appointments.length }}</span>
+        </button>
+        <button class="book-appointment-btn" (click)="openBookingPopup()">
+          <span class="material-icons">add</span>
+          <span>Book Appointment</span>
+        </button>
+      </div>
     </div>
 
-    <div class="card">
-      <h2>My Appointments</h2>
-      <p>View and manage your appointments</p>
-      <button routerLink="/customer/my-appointments">View Appointments</button>
+    <!-- Order Status Tracker -->
+    <app-order-status 
+      *ngIf="currentAppointment"
+      [status]="currentAppointment.status"
+      [deadline]="currentAppointment.deadline">
+    </app-order-status>
+
+    <!-- Notice Message -->
+    <div class="notice-banner" *ngIf="currentAppointment && currentAppointment.status !== 'PENDING'">
+      <span class="material-icons">lock</span>
+      <div class="notice-content">
+        <strong>Editing Restricted</strong>
+        <p>Your appointment has been {{ currentAppointment.status.toLowerCase().replace('_', ' ') }}. You can no longer edit or cancel this appointment. For changes, please contact support.</p>
+      </div>
     </div>
 
-    <div class="card">
-      <h2>Gallery</h2>
-      <p>Browse our work and get inspired</p>
-      <button routerLink="/customer/gallery">View Gallery</button>
-    </div>
+    <!-- My Appointments -->
+    <app-my-appointments
+      [appointments]="appointments"
+      [loading]="loading"
+      (cancel)="cancelAppointment($event)"
+      (edit)="openEditPopup($event)">
+    </app-my-appointments>
   </div>
 </div>
+
+<!-- Book Appointment Popup -->
+<app-book-appointment-popup
+  *ngIf="showBookingPopup"
+  [editMode]="!!editingAppointment"
+  [appointmentData]="editingAppointment"
+  (close)="closeBookingPopup()"
+  (success)="onBookingSuccess()">
+</app-book-appointment-popup>

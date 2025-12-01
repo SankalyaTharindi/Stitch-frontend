@@ -1,0 +1,22 @@
+:host{display:block;min-height:100vh;background:linear-gradient(135deg,rgba(45,1,12,.95),rgba(44,1,14,.95));color:#f8f5ff;font-family:system-ui,sans-serif}
+.customer-layout{display:flex;min-height:100vh}
+.book-appointment-page{flex:1;max-width:1200px;width:100%;margin:0 auto;margin-left:260px;padding:32px 48px}
+.page-header{margin-bottom:24px;h1{font-size:1.8rem;font-weight:700;color:#d4af37;margin:0 0 8px}.subtitle{color:#ffffff;font-size:1rem;margin:0}}
+.notice-box{margin:0 0 24px 0;padding:1rem 1.25rem;background:rgba(212,175,55,.1);border:1px solid rgba(212,175,55,.3);border-radius:8px;display:flex;gap:.75rem;align-items:flex-start;.material-icons{color:#d4af37;font-size:20px;margin-top:2px}p{margin:0;color:#f4e5c3;font-size:.9rem;line-height:1.5;strong{color:#d4af37}}}
+.form-container{padding:0}
+.appointment-form{max-width:100%}
+.form-group{margin-bottom:1.75rem;label{display:block;color:#d4af37;font-size:1rem;font-weight:600;margin-bottom:.65rem;.required{color:#ff6b6b}}input,textarea{width:100%;padding:1rem;background:rgba(255,255,255,.05);border:1.5px solid rgba(212,175,55,.3);border-radius:8px;color:#f4e5c3;font-size:1rem;transition:all .2s;box-sizing:border-box;font-family:inherit;&::placeholder{color:rgba(244,229,195,.4)}&:focus{outline:none;border-color:#d4af37;background:rgba(255,255,255,.08);box-shadow:0 0 0 3px rgba(212,175,55,.1)}}textarea{resize:vertical;min-height:140px}}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;@media(max-width:600px){grid-template-columns:1fr}}
+.file-upload-area{position:relative}
+.file-input{display:none}
+.upload-placeholder{border:2px dashed rgba(212,175,55,.4);border-radius:8px;padding:3rem;text-align:center;cursor:pointer;transition:all .2s;.material-icons{font-size:56px;color:#d4af37;margin-bottom:.75rem}p{color:#f4e5c3;margin:.5rem 0;font-size:1rem;font-weight:500}.hint{color:rgba(244,229,195,.6);font-size:.85rem}&:hover{border-color:#d4af37;background:rgba(212,175,55,.05)}}
+.image-preview{position:relative;border-radius:8px;overflow:hidden;img{width:100%;height:auto;display:block}}
+.remove-image-btn{position:absolute;top:12px;right:12px;width:36px;height:36px;border-radius:50%;background:rgba(255,0,0,.85);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s;.material-icons{font-size:22px}&:hover{background:rgba(255,0,0,1)}}
+.success-message{display:flex;align-items:center;gap:.75rem;color:#28a745;background:rgba(40,167,69,.15);padding:1rem;border-radius:8px;margin-bottom:1.5rem;font-size:.95rem;font-weight:500;border:1px solid rgba(40,167,69,.3);.material-icons{font-size:24px}}
+.error-message{display:flex;align-items:center;gap:.75rem;color:#ff6b6b;background:rgba(255,107,107,.15);padding:1rem;border-radius:8px;margin-bottom:1.5rem;font-size:.95rem;border:1px solid rgba(255,107,107,.3);.material-icons{font-size:24px}}
+.form-actions{display:flex;gap:1rem;margin-top:2rem}
+.btn-secondary,.btn-primary{flex:1;padding:1rem;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;transition:all .2s;border:none;&:disabled{opacity:.5;cursor:not-allowed}}
+.btn-secondary{background:rgba(255,255,255,.08);color:#e5d9ff;border:1px solid rgba(255,255,255,.2);flex:.8;&:hover:not(:disabled){background:rgba(255,255,255,.12)}}
+.btn-primary{background:linear-gradient(135deg,#d4af37,#f4e5c3,#d4af37);color:#12010a;font-weight:700;&:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 4px 12px rgba(212,175,55,.4)}}
+@media(max-width:900px){.customer-layout{flex-direction:column}.book-appointment-page{margin-left:0;padding-top:80px}}
+@media(max-width:768px){.book-appointment-page{padding:20px}.form-container{padding:0}.page-header h1{font-size:1.75rem}.form-actions{flex-direction:column}}

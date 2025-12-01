@@ -1,0 +1,122 @@
+<div class="customer-layout">
+  <!-- Navigation Sidebar -->
+  <app-shared-sidebar [title]="'Stitch'" [navItems]="customerNavItems"></app-shared-sidebar>
+
+  <!-- Main Content -->
+  <div class="book-appointment-page">
+    <div class="page-header">
+      <h1>Book an Appointment</h1>
+      <p class="subtitle">Fill in the details below to book your tailoring appointment</p>
+    </div>
+
+    <div class="notice-box">
+      <span class="material-icons">info</span>
+      <p>You can only edit appointments that are in <strong>PENDING</strong> status. Once approved, appointments cannot be modified.</p>
+    </div>
+
+    <div class="form-container">
+    <form (ngSubmit)="onSubmit()" class="appointment-form">
+      <div class="form-group">
+        <label for="customerName">Full Name <span class="required">*</span></label>
+        <input 
+          type="text" 
+          id="customerName" 
+          [(ngModel)]="formData.customerName" 
+          name="customerName"
+          placeholder="Enter your full name"
+          required>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="age">Age</label>
+          <input 
+            type="number" 
+            id="age" 
+            [(ngModel)]="formData.age" 
+            name="age"
+            placeholder="Your age"
+            min="1">
+        </div>
+
+        <div class="form-group">
+          <label for="phoneNumber">Phone Number <span class="required">*</span></label>
+          <input 
+            type="tel" 
+            id="phoneNumber" 
+            [(ngModel)]="formData.phoneNumber" 
+            name="phoneNumber"
+            placeholder="Enter phone number"
+            required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="deadline">Preferred Deadline <span class="required">*</span></label>
+        <input 
+          type="date" 
+          id="deadline" 
+          [(ngModel)]="formData.deadline" 
+          name="deadline"
+          required>
+      </div>
+
+      <div class="form-group">
+        <label for="inspoImage">Inspiration Image</label>
+        <div class="file-upload-area">
+          <input 
+            type="file" 
+            id="inspoImage" 
+            (change)="onFileSelected($event)"
+            accept="image/*"
+            class="file-input"
+            #fileInput>
+          
+          <div *ngIf="!previewUrl" class="upload-placeholder" (click)="fileInput.click()">
+            <span class="material-icons">cloud_upload</span>
+            <p>Click to upload inspiration image</p>
+            <span class="hint">PNG, JPG, JPEG up to 10MB</span>
+          </div>
+
+          <div *ngIf="previewUrl" class="image-preview">
+            <img [src]="previewUrl" alt="Preview">
+            <button type="button" class="remove-image-btn" (click)="removeImage()">
+              <span class="material-icons">close</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="notes">Requirements & Notes</label>
+        <textarea 
+          id="notes" 
+          [(ngModel)]="formData.notes" 
+          name="notes"
+          rows="4"
+          placeholder="Add detailed requirements, measurements, or any special instructions..."></textarea>
+      </div>
+
+      <div class="success-message" *ngIf="successMessage">
+        <span class="material-icons">check_circle</span>
+        {{ successMessage }}
+      </div>
+
+      <div class="error-message" *ngIf="errorMessage">
+        <span class="material-icons">error</span>
+        {{ errorMessage }}
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-secondary" [routerLink]="['/customer/dashboard']" [disabled]="loading">
+          Cancel
+        </button>
+        <button type="submit" class="btn-primary" [disabled]="loading">
+          <span *ngIf="!loading">Book Appointment</span>
+          <span *ngIf="loading">Booking...</span>
+        </button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
