@@ -1,6 +1,6 @@
 <div class="section">
   <div class="section-header">
-    <h2>All Appointments</h2>
+    <h2>Active Appointments</h2>
     <div class="filters">
       <select id="status-filter" [(ngModel)]="selectedStatus" (change)="onStatusChange()" title="Filter appointments by status">
         <option *ngFor="let option of statusOptions" [value]="option.value">
@@ -11,14 +11,14 @@
   </div>
 
   <div class="appointments-list" *ngIf="!loading; else loadingTemplate">
-    <div class="appointment-card" *ngFor="let appointment of appointments">
+    <div class="appointment-card" *ngFor="let appointment of activeAppointments">
       <div class="appointment-header">
         <div class="customer-info">
           <h3>{{ appointment.customerName }}</h3>
           <p class="phone">{{ appointment.phoneNumber }}</p>
         </div>
         <span class="status" [class]="'status-' + appointment.status.toLowerCase()">
-          {{ appointment.status }}
+          {{ appointment.status.replace('_', ' ') }}
         </span>
       </div>
       
@@ -37,21 +37,107 @@
         </div>
       </div>
 
+      <!-- Inspiration Image Section -->
+      <div class="image-section">
+        <div class="image-actions">
+          <span class="label">
+            <span class="material-icons">image</span>
+            Inspiration Image
+          </span>
+          <button *ngIf="appointment.inspoImageUrl" (click)="viewImage(appointment)" class="btn-view" title="View image">
+            <span class="material-icons">visibility</span>
+            View
+          </button>
+          <span *ngIf="!appointment.inspoImageUrl" class="no-image-text">
+            <span class="material-icons">image_not_supported</span>
+            No image
+          </span>
+        </div>
+      </div>
+
+      <!-- PENDING: Show Approve/Decline -->
       <div class="appointment-actions" *ngIf="appointment.status === 'PENDING'">
         <button class="btn-approve" (click)="onApprove(appointment.id!)">
-          ✓ Approve
+          <span class="material-icons">check_circle</span>
+          Approve
         </button>
         <button class="btn-decline" (click)="onDecline(appointment.id!)">
-          ✕ Decline
+          <span class="material-icons">cancel</span>
+          Decline
+        </button>
+      </div>
+
+      <!-- APPROVED: Show Mark In Progress -->
+      <div class="appointment-actions" *ngIf="appointment.status === 'APPROVED'">
+        <button class="btn-progress" (click)="markInProgress(appointment.id!)">
+          <span class="material-icons">play_arrow</span>
+          Mark In Progress
+        </button>
+      </div>
+
+      <!-- IN_PROGRESS: Show Mark Completed -->
+      <div class="appointment-actions" *ngIf="appointment.status === 'IN_PROGRESS'">
+        <button class="btn-complete" (click)="markCompleted(appointment.id!)">
+          <span class="material-icons">done_all</span>
+          Mark Completed
         </button>
       </div>
     </div>
 
-    <div *ngIf="appointments.length === 0" class="no-appointments">
+    <div *ngIf="activeAppointments.length === 0" class="no-appointments">
       <div class="empty-state">
         <span class="material-icons empty-icon">event_busy</span>
-        <h3>No appointments found</h3>
-        <p>There are no {{ selectedStatus === 'ALL' ? '' : selectedStatus.toLowerCase() }} appointments at the moment.</p>
+        <h3>No active appointments</h3>
+        <p>There are no active appointments at the moment.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Old/Completed Appointments Section -->
+  <div class="section-header old-appointments-header" *ngIf="completedAppointments.length > 0 && !loading">
+    <h2>Completed Appointments</h2>
+  </div>
+
+  <div class="appointments-list old-appointments" *ngIf="completedAppointments.length > 0 && !loading">
+    <div class="appointment-card completed" *ngFor="let appointment of completedAppointments">
+      <div class="appointment-header">
+        <div class="customer-info">
+          <h3>{{ appointment.customerName }}</h3>
+          <p class="phone">{{ appointment.phoneNumber }}</p>
+        </div>
+        <span class="status status-completed">
+          <span class="material-icons">check_circle</span>
+          COMPLETED
+        </span>
+      </div>
+      
+      <div class="appointment-details">
+        <div class="detail-item">
+          <span class="label">Age:</span>
+          <span class="value">{{ appointment.age }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Completed:</span>
+          <span class="value">{{ appointment.deadline | date:'medium' }}</span>
+        </div>
+      </div>
+
+      <!-- Inspiration Image Section -->
+      <div class="image-section">
+        <div class="image-actions">
+          <span class="label">
+            <span class="material-icons">image</span>
+            Inspiration Image
+          </span>
+          <button *ngIf="appointment.inspoImageUrl" (click)="viewImage(appointment)" class="btn-view" title="View image">
+            <span class="material-icons">visibility</span>
+            View
+          </button>
+          <span *ngIf="!appointment.inspoImageUrl" class="no-image-text">
+            <span class="material-icons">image_not_supported</span>
+            No image
+          </span>
+        </div>
       </div>
     </div>
   </div>
@@ -62,4 +148,27 @@
       <p>Loading appointments...</p>
     </div>
   </ng-template>
+</div>
+
+<!-- Image Modal -->
+<div class="image-modal-overlay" *ngIf="showImageModal" (click)="closeImageModal()">
+  <div class="image-modal-content" (click)="$event.stopPropagation()">
+    <button class="modal-close-btn" (click)="closeImageModal()" aria-label="Close">
+      <span class="material-icons">close</span>
+    </button>
+    
+    <button *ngIf="totalImages > 1 && currentImageIndex > 0" class="modal-nav-btn modal-nav-prev" (click)="previousImage()" aria-label="Previous image">
+      <span class="material-icons">chevron_left</span>
+    </button>
+    
+    <img [src]="modalImageUrl" alt="Appointment inspiration image" title="Appointment inspiration image" class="modal-image">
+    
+    <button *ngIf="totalImages > 1 && currentImageIndex < totalImages - 1" class="modal-nav-btn modal-nav-next" (click)="nextImage()" aria-label="Next image">
+      <span class="material-icons">chevron_right</span>
+    </button>
+    
+    <div *ngIf="totalImages > 1" class="image-counter">
+      {{ currentImageIndex + 1 }} / {{ totalImages }}
+    </div>
+  </div>
 </div>

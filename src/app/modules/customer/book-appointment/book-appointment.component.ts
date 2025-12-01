@@ -25,8 +25,8 @@ export class BookAppointmentComponent implements OnInit {
     inspoImageUrl: ''
   };
 
-  selectedFile: File | null = null;
-  previewUrl: string | null = null;
+  selectedFiles: File[] = [];
+  previewUrls: string[] = [];
   loading = false;
   errorMessage = '';
   successMessage = '';
@@ -46,21 +46,29 @@ export class BookAppointmentComponent implements OnInit {
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      this.selectedFile = input.files[0];
+    if (input.files && input.files.length > 0) {
+      console.log('Files selected:', input.files.length);
+      Array.from(input.files).forEach(file => {
+        this.selectedFiles.push(file);
+        
+        const reader = new FileReader();
+        reader.onload = (e: ProgressEvent<FileReader>) => {
+          this.previewUrls.push(e.target?.result as string);
+          console.log('Preview URLs count:', this.previewUrls.length);
+        };
+        reader.readAsDataURL(file);
+      });
       
-      const reader = new FileReader();
-      reader.onload = (e: ProgressEvent<FileReader>) => {
-        this.previewUrl = e.target?.result as string;
-      };
-      reader.readAsDataURL(this.selectedFile);
+      input.value = '';
     }
   }
 
-  removeImage(): void {
-    this.selectedFile = null;
-    this.previewUrl = null;
-    this.formData.inspoImageUrl = '';
+  removeImage(index: number): void {
+    this.previewUrls.splice(index, 1);
+    this.selectedFiles.splice(index, 1);
+    if (this.previewUrls.length === 0) {
+      this.formData.inspoImageUrl = '';
+    }
   }
 
   onSubmit(): void {
@@ -85,8 +93,8 @@ export class BookAppointmentComponent implements OnInit {
 
     this.loading = true;
 
-    if (this.previewUrl) {
-      this.formData.inspoImageUrl = this.previewUrl;
+    if (this.previewUrls.length > 0) {
+      this.formData.inspoImageUrl = this.previewUrls[0];
     }
 
     const appointment: Appointment = {
@@ -99,7 +107,7 @@ export class BookAppointmentComponent implements OnInit {
       status: 'PENDING'
     };
 
-    this.appointmentService.createAppointment(appointment, this.selectedFile || undefined).subscribe({
+    this.appointmentService.createAppointment(appointment, this.selectedFiles.length > 0 ? this.selectedFiles : undefined).subscribe({
       next: (response) => {
         this.loading = false;
         this.successMessage = 'Appointment booked successfully!';

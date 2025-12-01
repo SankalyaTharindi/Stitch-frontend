@@ -88,6 +88,15 @@ export class AdminDashboardComponent implements OnInit {
     }
   }
 
+  updateAppointmentStatus(event: {id: number, status: string}): void {
+    this.appointmentService.updateAppointmentStatus(event.id, event.status).subscribe({
+      next: () => {
+        this.loadAppointments();
+      },
+      error: (error: any) => console.error('Error updating appointment status:', error)
+    });
+  }
+
   getPendingCount(): number {
     return this.appointments.filter(apt => apt.status === 'PENDING').length;
   }

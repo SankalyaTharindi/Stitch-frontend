@@ -23,8 +23,10 @@ export class BookAppointmentPopupComponent implements OnInit {
     inspoImageUrl: ''
   };
 
-  selectedFile: File | null = null;
-  previewUrl: string | null = null;
+  selectedFiles: File[] = [];
+  previewUrls: string[] = [];
+  existingImageIndices: number[] = []; // Track which preview URLs are existing images (-1 = new, 0+ = existing index)
+  deletedImageIndices: number[] = []; // Track which existing images user wants to delete
   loading = false;
   errorMessage = '';
 
@@ -44,30 +46,75 @@ export class BookAppointmentPopupComponent implements OnInit {
         notes: this.appointmentData.notes || '',
         inspoImageUrl: this.appointmentData.inspoImageUrl || ''
       };
-      if (this.appointmentData.inspoImageUrl) {
-        this.previewUrl = this.appointmentData.inspoImageUrl;
+      if (this.appointmentData.inspoImageUrl && this.appointmentData.id) {
+        // Load all existing images as blobs and create object URLs for preview
+        const imageCount = this.appointmentService.getImageCount(this.appointmentData.inspoImageUrl);
+        for (let i = 0; i < imageCount; i++) {
+          this.appointmentService.getImageBlob(this.appointmentData.id, false, i).subscribe({
+            next: (blob) => {
+              const currentIndex = this.previewUrls.length;
+              this.previewUrls.push(URL.createObjectURL(blob));
+              this.existingImageIndices.push(i); // Mark this as an existing image
+            },
+            error: (err) => {
+              console.error(`Error loading existing image ${i}:`, err);
+            }
+          });
+        }
       }
     }
   }
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      this.selectedFile = input.files[0];
+    if (input.files && input.files.length > 0) {
+      console.log('Files selected:', input.files.length);
+      // Add new files to the array
+      Array.from(input.files).forEach(file => {
+        this.selectedFiles.push(file);
+        
+        // Create preview for each file
+        const reader = new FileReader();
+        reader.onload = (e: ProgressEvent<FileReader>) => {
+          this.previewUrls.push(e.target?.result as string);
+          this.existingImageIndices.push(-1); // -1 indicates a new file, not existing
+          console.log('Preview URLs count:', this.previewUrls.length);
+        };
+        reader.readAsDataURL(file);
+      });
       
-      // Create preview
-      const reader = new FileReader();
-      reader.onload = (e: ProgressEvent<FileReader>) => {
-        this.previewUrl = e.target?.result as string;
-      };
-      reader.readAsDataURL(this.selectedFile);
+      // Reset input to allow selecting the same file again
+      input.value = '';
     }
   }
 
-  removeImage(): void {
-    this.selectedFile = null;
-    this.previewUrl = null;
-    this.formData.inspoImageUrl = '';
+  removeImage(index: number): void {
+    const existingIndex = this.existingImageIndices[index];
+    
+    // If it's an existing image (not -1), mark it for deletion
+    if (existingIndex >= 0) {
+      this.deletedImageIndices.push(existingIndex);
+      console.log('Marked existing image for deletion:', existingIndex);
+    } else {
+      // It's a new file, remove from selectedFiles
+      // Count how many new files are before this index
+      let newFileIndex = 0;
+      for (let i = 0; i < index; i++) {
+        if (this.existingImageIndices[i] === -1) {
+          newFileIndex++;
+        }
+      }
+      this.selectedFiles.splice(newFileIndex, 1);
+      console.log('Removed new file at index:', newFileIndex);
+    }
+    
+    // Remove from preview arrays
+    this.previewUrls.splice(index, 1);
+    this.existingImageIndices.splice(index, 1);
+    
+    if (this.previewUrls.length === 0) {
+      this.formData.inspoImageUrl = '';
+    }
   }
 
   onSubmit(): void {
@@ -95,9 +142,9 @@ export class BookAppointmentPopupComponent implements OnInit {
 
     this.loading = true;
 
-    // For now, using the preview URL. In production, you'd upload to a server first
-    if (this.previewUrl) {
-      this.formData.inspoImageUrl = this.previewUrl;
+    // For now, using the first preview URL. In production, you'd upload to a server first
+    if (this.previewUrls.length > 0) {
+      this.formData.inspoImageUrl = this.previewUrls[0];
     }
 
     // Create proper Appointment object with required status field
@@ -112,10 +159,21 @@ export class BookAppointmentPopupComponent implements OnInit {
     };
 
     console.log('Submitting appointment:', appointment);
-
+    console.log('Selected NEW files count:', this.selectedFiles.length);
+    console.log('Existing images count:', this.existingImageIndices.filter(i => i >= 0).length);
+    console.log('Images to delete:', this.deletedImageIndices);
+    
+    // In edit mode: Backend will APPEND new images to existing ones and DELETE specified images
+    // Send indices of images to delete along with new images to add
+    
     const apiCall = this.editMode && this.appointmentData?.id
-      ? this.appointmentService.updateAppointment(this.appointmentData.id, appointment, this.selectedFile || undefined)
-      : this.appointmentService.createAppointment(appointment, this.selectedFile || undefined);
+      ? this.appointmentService.updateAppointment(
+          this.appointmentData.id, 
+          appointment, 
+          this.selectedFiles.length > 0 ? this.selectedFiles : undefined,
+          this.deletedImageIndices.length > 0 ? this.deletedImageIndices : undefined
+        )
+      : this.appointmentService.createAppointment(appointment, this.selectedFiles.length > 0 ? this.selectedFiles : undefined);
 
     apiCall.subscribe({
       next: (response) => {

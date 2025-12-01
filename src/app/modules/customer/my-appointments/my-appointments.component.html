@@ -42,6 +42,18 @@
                 <span class="value">{{ appointment.notes }}</span>
               </div>
             </div>
+
+            <div class="info-row image-row">
+              <span class="material-icons">image</span>
+              <div class="info-content">
+                <span class="label">Inspiration Image</span>
+                <button *ngIf="appointment.inspoImageUrl" (click)="viewImage(appointment)" class="btn-view-image" title="View image">
+                  <span class="material-icons">visibility</span>
+                  View
+                </button>
+                <span *ngIf="!appointment.inspoImageUrl" class="no-image-text">No image</span>
+              </div>
+            </div>
           </div>
 
           <div class="card-actions" *ngIf="appointment.status === 'PENDING'">
@@ -67,7 +79,6 @@
             <div class="status-badge completed">
               {{ appointment.status }}
             </div>
-            <span class="appointment-id">#{{ appointment.id }}</span>
           </div>
           
           <div class="card-body">
@@ -88,6 +99,29 @@
       <span class="material-icons empty-icon">event_busy</span>
       <h3>No Appointments Yet</h3>
       <p>Book your first appointment to get started!</p>
+    </div>
+  </div>
+</div>
+
+<!-- Image Modal -->
+<div class="image-modal-overlay" *ngIf="showImageModal" (click)="closeImageModal()">
+  <div class="image-modal-content" (click)="$event.stopPropagation()">
+    <button class="modal-close-btn" (click)="closeImageModal()" aria-label="Close">
+      <span class="material-icons">close</span>
+    </button>
+    
+    <button *ngIf="totalImages > 1 && currentImageIndex > 0" class="modal-nav-btn modal-nav-prev" (click)="previousImage()" aria-label="Previous image">
+      <span class="material-icons">chevron_left</span>
+    </button>
+    
+    <img [src]="modalImageUrl" alt="Appointment inspiration image" title="Appointment inspiration image" class="modal-image">
+    
+    <button *ngIf="totalImages > 1 && currentImageIndex < totalImages - 1" class="modal-nav-btn modal-nav-next" (click)="nextImage()" aria-label="Next image">
+      <span class="material-icons">chevron_right</span>
+    </button>
+    
+    <div *ngIf="totalImages > 1" class="image-counter">
+      {{ currentImageIndex + 1 }} / {{ totalImages }}
     </div>
   </div>
 </div>

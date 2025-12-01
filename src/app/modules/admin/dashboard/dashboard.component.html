@@ -41,7 +41,8 @@
       [loading]="loading"
       (statusChange)="onStatusChange($event)"
       (approve)="approveAppointment($event)"
-      (decline)="declineAppointment($event)">
+      (decline)="declineAppointment($event)"
+      (updateStatus)="updateAppointmentStatus($event)">
     </app-appointments-list>
   </div>
 </div>

@@ -62,27 +62,30 @@
       </div>
 
       <div class="form-group">
-        <label for="inspoImage">Inspiration Image</label>
+        <label for="inspoImage">Inspiration Images <span *ngIf="previewUrls.length > 0" class="image-count-badge">{{ previewUrls.length }}</span></label>
         <div class="file-upload-area">
           <input 
             type="file" 
             id="inspoImage" 
             (change)="onFileSelected($event)"
             accept="image/*"
+            multiple
             class="file-input"
             #fileInput>
           
-          <div *ngIf="!previewUrl" class="upload-placeholder" (click)="fileInput.click()">
+          <div class="upload-placeholder" (click)="fileInput.click()">
             <span class="material-icons">cloud_upload</span>
-            <p>Click to upload inspiration image</p>
-            <span class="hint">PNG, JPG, JPEG up to 10MB</span>
+            <p>Click to upload inspiration images</p>
+            <span class="hint">Hold Ctrl/Cmd to select multiple • PNG, JPG, JPEG up to 10MB each</span>
           </div>
 
-          <div *ngIf="previewUrl" class="image-preview">
-            <img [src]="previewUrl" alt="Preview">
-            <button type="button" class="remove-image-btn" (click)="removeImage()">
-              <span class="material-icons">close</span>
-            </button>
+          <div *ngIf="previewUrls.length > 0" class="images-preview-grid">
+            <div *ngFor="let preview of previewUrls; let i = index" class="image-preview-item">
+              <img [src]="preview" alt="Preview {{i + 1}}">
+              <button type="button" class="remove-image-btn" (click)="removeImage(i)">
+                <span class="material-icons">close</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
