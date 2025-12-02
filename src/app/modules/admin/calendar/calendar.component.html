@@ -1,0 +1,139 @@
+<div class="admin-layout">
+  <app-shared-sidebar [title]="'Stitch'" [navItems]="adminNavItems"></app-shared-sidebar>
+  
+  <div class="calendar-container">
+    <div class="page-header">
+      <h1>Appointment Calendar</h1>
+      <p class="subtitle">View all appointments by deadline</p>
+    </div>
+
+    <div *ngIf="loading" class="loading">
+      <div class="spinner"></div>
+      <p>Loading calendar...</p>
+    </div>
+
+    <div *ngIf="!loading" class="calendar-wrapper">
+      <div class="calendar-header">
+        <button class="btn-nav" (click)="previousMonth()">
+          <span class="material-icons">chevron_left</span>
+        </button>
+        
+        <div class="month-year">
+          <h2>{{ monthNames[currentDate.getMonth()] }} {{ currentDate.getFullYear() }}</h2>
+        </div>
+        
+        <button class="btn-nav" (click)="nextMonth()">
+          <span class="material-icons">chevron_right</span>
+        </button>
+        
+        <button class="btn-today" (click)="goToToday()">Today</button>
+      </div>
+
+      <div class="calendar-grid">
+        <div *ngFor="let day of weekDays" class="weekday-header">
+          {{ day }}
+        </div>
+
+        <div 
+          *ngFor="let day of calendarDays" 
+          class="calendar-day"
+          [class.other-month]="!day.isCurrentMonth"
+          [class.today]="day.isToday"
+          [class.has-appointments]="day.appointments.length > 0"
+          (click)="selectDay(day)">
+          
+          <div class="day-number">{{ day.date.getDate() }}</div>
+          
+          <div *ngIf="day.appointments.length > 0" class="appointment-indicators">
+            <div 
+              *ngFor="let apt of day.appointments.slice(0, 3)" 
+              class="appointment-dot"
+              [style.background-color]="getStatusColor(apt.status)"
+              [title]="apt.customerName + ' - ' + getStatusLabel(apt.status)">
+            </div>
+            <span *ngIf="day.appointments.length > 3" class="more-indicator">
+              +{{ day.appointments.length - 3 }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Appointment Details Panel -->
+    <div *ngIf="selectedDay" class="details-panel-overlay" (click)="closeDetails()">
+      <div class="details-panel" (click)="$event.stopPropagation()">
+        <div class="panel-header">
+          <h3>
+            <span class="material-icons">event</span>
+            {{ selectedDay.date | date: 'MMMM d, yyyy' }}
+          </h3>
+          <button class="btn-close" (click)="closeDetails()">
+            <span class="material-icons">close</span>
+          </button>
+        </div>
+
+        <div class="panel-body">
+          <div *ngFor="let apt of selectedDay.appointments" class="appointment-detail">
+            <div class="status-indicator" [style.background-color]="getStatusColor(apt.status)"></div>
+            <div class="appointment-info">
+              <div class="customer-name">
+                <span class="material-icons">person</span>
+                {{ apt.customerName }}
+              </div>
+              <div class="contact-info">
+                <span class="material-icons">phone</span>
+                {{ apt.phoneNumber }}
+              </div>
+              <div class="status-badge" [style.background-color]="getStatusColor(apt.status)">
+                {{ getStatusLabel(apt.status) }}
+              </div>
+              <div *ngIf="apt.notes" class="appointment-notes">
+                <span class="material-icons">notes</span>
+                <span>{{ apt.notes }}</span>
+              </div>
+              <div class="appointment-actions">
+                <button 
+                  *ngIf="hasImages(apt)" 
+                  class="btn-view-images" 
+                  (click)="viewImage(apt)">
+                  <span class="material-icons">photo_library</span>
+                  View Images ({{ getImageCount(apt.inspoImageUrl || '') }})
+                </button>
+                <span *ngIf="!hasImages(apt)" class="no-images">No inspiration pictures</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Image Modal -->
+<div *ngIf="showImageModal" class="image-modal-overlay" (click)="closeImageModal()">
+  <div class="image-modal-content" (click)="$event.stopPropagation()">
+    <button class="modal-close-btn" (click)="closeImageModal()">
+      <span class="material-icons">close</span>
+    </button>
+    
+    <img [src]="modalImageUrl" alt="Inspiration image" class="modal-image">
+    
+    <div class="image-navigation" *ngIf="totalImages > 1">
+      <button 
+        class="nav-btn prev-btn" 
+        (click)="previousImage()" 
+        [disabled]="currentImageIndex === 0">
+        <span class="material-icons">chevron_left</span>
+      </button>
+      
+      <span class="image-counter">{{ currentImageIndex + 1 }} / {{ totalImages }}</span>
+      
+      <button 
+        class="nav-btn next-btn" 
+        (click)="nextImage()" 
+        [disabled]="currentImageIndex === totalImages - 1">
+        <span class="material-icons">chevron_right</span>
+      </button>
+    </div>
+  </div>
+</div>

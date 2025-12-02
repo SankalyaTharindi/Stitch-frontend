@@ -9,6 +9,7 @@ import { UpcomingDeadlinesComponent } from './upcoming-deadlines/upcoming-deadli
 import { AppointmentsListComponent } from './appointments-list/appointments-list.component';
 import { CustomersComponent } from './customers/customers.component';
 import { AppointmentsComponent } from './appointments/appointments.component';
+import { CalendarComponent } from './calendar/calendar.component';
 
 const routes: Routes = [
   {
@@ -24,6 +25,10 @@ const routes: Routes = [
     component: CustomersComponent
   },
   {
+    path: 'calendar',
+    component: CalendarComponent
+  },
+  {
     path: '',
     redirectTo: 'dashboard',
     pathMatch: 'full'
@@ -37,7 +42,8 @@ const routes: Routes = [
     UpcomingDeadlinesComponent,
     AppointmentsListComponent,
     CustomersComponent,
-    AppointmentsComponent
+    AppointmentsComponent,
+    CalendarComponent
   ],
   imports: [
     CommonModule,
