@@ -44,5 +44,78 @@
       (decline)="declineAppointment($event)"
       (updateStatus)="updateAppointmentStatus($event)">
     </app-appointments-list>
+
+    <!-- Completed Appointments -->
+    <div class="section" *ngIf="!loading && getCompletedAppointments().length > 0">
+      <h2>Completed Appointments</h2>
+      <div class="card-grid">
+        <div class="appointment-card-small completed" *ngFor="let appointment of getCompletedAppointments()">
+          <div class="card-icon">
+            <span class="material-icons">check_circle</span>
+          </div>
+          <div class="card-content">
+            <h4>{{ appointment.customerName }}</h4>
+            <p class="phone">{{ appointment.phoneNumber }}</p>
+            <p class="age">Age: {{ appointment.age }}</p>
+            <p class="deadline">{{ appointment.deadline | date:'MMM dd, yyyy' }}</p>
+            <div class="card-actions">
+              <button *ngIf="appointment.inspoImageUrl" (click)="viewImage(appointment)" class="btn-view-card" title="View image">
+                <span class="material-icons">visibility</span>
+                View
+              </button>
+              <span *ngIf="!appointment.inspoImageUrl" class="no-image">No inspiration pictures</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Declined Appointments -->
+    <div class="section declined-section" *ngIf="!loading && getDeclinedAppointments().length > 0">
+      <h2>Declined Appointments</h2>
+      <div class="card-grid">
+        <div class="appointment-card-small declined" *ngFor="let appointment of getDeclinedAppointments()">
+          <div class="card-icon">
+            <span class="material-icons">cancel</span>
+          </div>
+          <div class="card-content">
+            <h4>{{ appointment.customerName }}</h4>
+            <p class="phone">{{ appointment.phoneNumber }}</p>
+            <p class="deadline">{{ appointment.deadline | date:'MMM dd, yyyy' }}</p>
+            <p class="reason" *ngIf="appointment.notes">{{ appointment.notes }}</p>
+            <div class="card-actions">
+              <button *ngIf="appointment.inspoImageUrl" (click)="viewImage(appointment)" class="btn-view-card" title="View image">
+                <span class="material-icons">visibility</span>
+                View
+              </button>
+              <span *ngIf="!appointment.inspoImageUrl" class="no-image">No inspiration pictures</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Image Modal -->
+    <div class="image-modal-overlay" *ngIf="showImageModal" (click)="closeImageModal()">
+      <div class="image-modal-content" (click)="$event.stopPropagation()">
+        <button class="modal-close-btn" (click)="closeImageModal()" aria-label="Close">
+          <span class="material-icons">close</span>
+        </button>
+        
+        <button *ngIf="totalImages > 1 && currentImageIndex > 0" class="modal-nav-btn modal-nav-prev" (click)="previousImage()" aria-label="Previous image">
+          <span class="material-icons">chevron_left</span>
+        </button>
+        
+        <img [src]="modalImageUrl" alt="Appointment inspiration image" class="modal-image">
+        
+        <button *ngIf="totalImages > 1 && currentImageIndex < totalImages - 1" class="modal-nav-btn modal-nav-next" (click)="nextImage()" aria-label="Next image">
+          <span class="material-icons">chevron_right</span>
+        </button>
+        
+        <div *ngIf="totalImages > 1" class="image-counter">
+          {{ currentImageIndex + 1 }} / {{ totalImages }}
+        </div>
+      </div>
+    </div>
   </div>
 </div>

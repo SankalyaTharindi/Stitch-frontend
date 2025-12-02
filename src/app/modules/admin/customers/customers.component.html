@@ -1,5 +1,5 @@
 <div class="admin-layout">
-  <app-shared-sidebar [title]="'Stitch Admin'" [navItems]="adminNavItems"></app-shared-sidebar>
+  <app-shared-sidebar [title]="'Stitch'" [navItems]="adminNavItems"></app-shared-sidebar>
   
   <div class="customers-container">
     <div class="customers-section">
@@ -31,7 +31,6 @@
           <th>Email</th>
           <th>Phone</th>
           <th>Appointments</th>
-          <th>Last Visit</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -48,12 +47,8 @@
           <td>
             <span class="badge">{{ customer.appointmentCount || 0 }}</span>
           </td>
-          <td>{{ customer.lastAppointmentDate ? (customer.lastAppointmentDate | date:'shortDate') : 'Never' }}</td>
           <td>
             <div class="actions">
-              <button class="btn-icon" title="View Details">
-                <span class="material-icons">visibility</span>
-              </button>
               <button class="btn-icon btn-danger" title="Delete" (click)="deleteCustomer(customer.id!)">
                 <span class="material-icons">delete</span>
               </button>

@@ -1,7 +1,7 @@
 .section{background:rgba(5,2,10,.9);border-radius:14px;padding:20px;margin-bottom:20px;border:1px solid rgba(246,231,193,.18)}
 .section h2{font-size:1.3rem;margin:0 0 16px;color:#f6e7c1}
 .section-header{display:flex;justify-content:space-between;margin-bottom:12px}
-.filters select{padding:.6rem 1rem;border:1px solid rgba(246,231,193,.3);border-radius:8px;background:rgba(6,2,12,.9);color:#f8f5ff;font-size:.9rem}
+.filters select{padding:.6rem 1rem;border:1px solid rgba(246,231,193,.3);border-radius:8px;background:rgba(6,2,12,.9);color:#f8f5ff;font-size:.9rem;cursor:pointer;option{background:rgba(45,1,12,.95);color:#f8f5ff;&:hover{background:rgba(80,5,20,.95)}}&:focus{outline:none;border-color:#d4af37}}
 .appointments-list{display:grid;gap:1.5rem}
 .appointment-card{background:rgba(40,15,10,.6);padding:1.5rem;border-radius:12px;border:1px solid rgba(212,175,55,.2)}
 .appointment-header{display:flex;justify-content:space-between;margin-bottom:1rem;padding-bottom:1rem;border-bottom:2px solid rgba(212,175,55,.1)}

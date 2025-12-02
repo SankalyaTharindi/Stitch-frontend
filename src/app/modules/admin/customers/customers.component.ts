@@ -37,11 +37,25 @@ export class CustomersComponent implements OnInit {
 
   loadCustomers(): void {
     this.loading = true;
+    
     this.getCustomers().subscribe({
-      next: (data: Customer[]) => {
-        this.customers = data;
-        this.filteredCustomers = data;
-        this.loading = false;
+      next: (customers: Customer[]) => {
+        // Fetch appointments to count per customer
+        this.http.get<any[]>('http://localhost:8080/api/appointments/admin/all').subscribe({
+          next: (appointments) => {
+            this.customers = customers.map(customer => ({
+              ...customer,
+              appointmentCount: appointments.filter(apt => apt.customer?.id === customer.id).length
+            }));
+            this.filteredCustomers = this.customers;
+            this.loading = false;
+          },
+          error: () => {
+            this.customers = customers;
+            this.filteredCustomers = customers;
+            this.loading = false;
+          }
+        });
       },
       error: (error: any) => {
         console.error('Error loading customers:', error);

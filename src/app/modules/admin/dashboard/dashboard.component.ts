@@ -12,6 +12,12 @@ export class AdminDashboardComponent implements OnInit {
   filteredAppointments: Appointment[] = [];
   loading = true;
   selectedStatus = 'ALL';
+  showImageModal = false;
+  modalImageUrl = '';
+  imageCache = new Map<number, {[index: number]: string}>();
+  currentImageIndex = 0;
+  totalImages = 0;
+  currentAppointmentId: number | null = null;
 
   adminNavItems: NavItem[] = [
     { label: 'Dashboard', route: '/admin/dashboard', icon: 'dashboard' },
@@ -120,5 +126,71 @@ export class AdminDashboardComponent implements OnInit {
       })
       .sort((a, b) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime())
       .slice(0, 5);
+  }
+
+  getCompletedAppointments(): Appointment[] {
+    return this.appointments
+      .filter(apt => apt.status === 'COMPLETED')
+      .sort((a, b) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime());
+  }
+
+  getDeclinedAppointments(): Appointment[] {
+    return this.appointments
+      .filter(apt => apt.status === 'DECLINED')
+      .sort((a, b) => new Date(b.deadline).getTime() - new Date(a.deadline).getTime());
+  }
+
+  viewImage(appointment: Appointment): void {
+    if (!appointment.id || !appointment.inspoImageUrl) return;
+    
+    this.currentAppointmentId = appointment.id;
+    this.currentImageIndex = 0;
+    this.totalImages = this.appointmentService.getImageCount(appointment.inspoImageUrl);
+    
+    this.loadImage(appointment.id, 0);
+  }
+
+  loadImage(appointmentId: number, index: number): void {
+    if (this.imageCache.has(appointmentId) && this.imageCache.get(appointmentId)?.[index]) {
+      this.modalImageUrl = this.imageCache.get(appointmentId)![index];
+      this.showImageModal = true;
+      return;
+    }
+
+    this.appointmentService.getImageBlob(appointmentId, true, index).subscribe({
+      next: (blob) => {
+        const objectUrl = URL.createObjectURL(blob);
+        
+        if (!this.imageCache.has(appointmentId)) {
+          this.imageCache.set(appointmentId, {});
+        }
+        this.imageCache.get(appointmentId)![index] = objectUrl;
+        
+        this.modalImageUrl = objectUrl;
+        this.showImageModal = true;
+      },
+      error: (err) => {
+        console.error('Error loading image:', err);
+      }
+    });
+  }
+
+  nextImage(): void {
+    if (this.currentAppointmentId && this.currentImageIndex < this.totalImages - 1) {
+      this.currentImageIndex++;
+      this.loadImage(this.currentAppointmentId, this.currentImageIndex);
+    }
+  }
+
+  previousImage(): void {
+    if (this.currentAppointmentId && this.currentImageIndex > 0) {
+      this.currentImageIndex--;
+      this.loadImage(this.currentAppointmentId, this.currentImageIndex);
+    }
+  }
+
+  closeImageModal(): void {
+    this.showImageModal = false;
+    this.modalImageUrl = '';
   }
 }

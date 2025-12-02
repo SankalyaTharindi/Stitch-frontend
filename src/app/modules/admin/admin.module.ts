@@ -8,11 +8,16 @@ import { StatsGridComponent } from './stats-grid/stats-grid.component';
 import { UpcomingDeadlinesComponent } from './upcoming-deadlines/upcoming-deadlines.component';
 import { AppointmentsListComponent } from './appointments-list/appointments-list.component';
 import { CustomersComponent } from './customers/customers.component';
+import { AppointmentsComponent } from './appointments/appointments.component';
 
 const routes: Routes = [
   {
     path: 'dashboard',
     component: AdminDashboardComponent
+  },
+  {
+    path: 'appointments',
+    component: AppointmentsComponent
   },
   {
     path: 'customers',
@@ -31,7 +36,8 @@ const routes: Routes = [
     StatsGridComponent,
     UpcomingDeadlinesComponent,
     AppointmentsListComponent,
-    CustomersComponent
+    CustomersComponent,
+    AppointmentsComponent
   ],
   imports: [
     CommonModule,

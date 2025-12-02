@@ -93,55 +93,6 @@
     </div>
   </div>
 
-  <!-- Old/Completed Appointments Section -->
-  <div class="section-header old-appointments-header" *ngIf="completedAppointments.length > 0 && !loading">
-    <h2>Completed Appointments</h2>
-  </div>
-
-  <div class="appointments-list old-appointments" *ngIf="completedAppointments.length > 0 && !loading">
-    <div class="appointment-card completed" *ngFor="let appointment of completedAppointments">
-      <div class="appointment-header">
-        <div class="customer-info">
-          <h3>{{ appointment.customerName }}</h3>
-          <p class="phone">{{ appointment.phoneNumber }}</p>
-        </div>
-        <span class="status status-completed">
-          <span class="material-icons">check_circle</span>
-          COMPLETED
-        </span>
-      </div>
-      
-      <div class="appointment-details">
-        <div class="detail-item">
-          <span class="label">Age:</span>
-          <span class="value">{{ appointment.age }}</span>
-        </div>
-        <div class="detail-item">
-          <span class="label">Completed:</span>
-          <span class="value">{{ appointment.deadline | date:'medium' }}</span>
-        </div>
-      </div>
-
-      <!-- Inspiration Image Section -->
-      <div class="image-section">
-        <div class="image-actions">
-          <span class="label">
-            <span class="material-icons">image</span>
-            Inspiration Image
-          </span>
-          <button *ngIf="appointment.inspoImageUrl" (click)="viewImage(appointment)" class="btn-view" title="View image">
-            <span class="material-icons">visibility</span>
-            View
-          </button>
-          <span *ngIf="!appointment.inspoImageUrl" class="no-image-text">
-            <span class="material-icons">image_not_supported</span>
-            No image
-          </span>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <ng-template #loadingTemplate>
     <div class="loading">
       <div class="spinner"></div>

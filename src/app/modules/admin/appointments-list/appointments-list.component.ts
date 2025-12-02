@@ -25,7 +25,7 @@ export class AppointmentsListComponent {
 
   get activeAppointments(): Appointment[] {
     return this.appointments
-      .filter(apt => apt.status !== 'COMPLETED')
+      .filter(apt => apt.status !== 'COMPLETED' && apt.status !== 'DECLINED')
       .sort((a, b) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime());
   }
 

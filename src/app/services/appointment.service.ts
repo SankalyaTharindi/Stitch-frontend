@@ -11,6 +11,7 @@ export interface Appointment {
   inspoImageUrl?: string;
   status: string;
   notes?: string;
+  declineReason?: string;
 }
 
 @Injectable({
