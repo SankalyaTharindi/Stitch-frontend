@@ -1,0 +1,199 @@
+<div class="admin-layout">
+  <app-shared-sidebar [title]="'Stitch'" [navItems]="adminNavItems"></app-shared-sidebar>
+  
+  <div class="gallery-container">
+    <div class="page-header">
+      <div class="header-content">
+        <h1>Gallery Management</h1>
+      </div>
+      <div class="header-actions">
+        <button class="btn-refresh" (click)="loadImages()" [disabled]="loading" title="Refresh gallery">
+          <span class="material-icons">refresh</span>
+          Refresh
+        </button>
+        <button class="btn-upload" (click)="openUploadModal()">
+          <span class="material-icons">add_photo_alternate</span>
+          Upload Image
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="loading" class="loading">
+      <div class="spinner"></div>
+      <p>Loading gallery...</p>
+    </div>
+
+    <div *ngIf="!loading && images.length === 0" class="empty-state">
+      <span class="material-icons empty-icon">collections</span>
+      <h3>No Images Yet</h3>
+      <p>Start building your gallery by uploading images</p>
+      <button class="btn-upload-empty" (click)="openUploadModal()">
+        <span class="material-icons">add_photo_alternate</span>
+        Upload First Image
+      </button>
+    </div>
+
+    <div *ngIf="!loading && images.length > 0" class="gallery-grid">
+      <div *ngFor="let image of images" class="gallery-item">
+        <div class="image-wrapper">
+          <img [src]="getImageUrl(image.fileName)" [alt]="image.title || 'Tailored saree jacket design'" title="Gallery image: {{ image.title || 'Tailored saree jacket design' }}">
+          <div class="image-overlay">
+            <button class="btn-delete" (click)="deleteImage(image.id)" title="Delete">
+              <span class="material-icons">delete</span>
+            </button>
+          </div>
+        </div>
+        <div class="image-info">
+          <div class="info-header">
+            <div class="info-text">
+              <h3 *ngIf="image.title">{{ image.title }}</h3>
+              <p *ngIf="image.description">{{ image.description }}</p>
+            </div>
+            <button class="btn-edit" (click)="openEditModal(image)" title="Edit details">
+              <span class="material-icons">edit</span>
+            </button>
+          </div>
+          <div class="image-stats">
+            <span class="stat">
+              <span class="material-icons">favorite</span>
+              {{ image.likeCount || 0 }} likes
+            </span>
+            <span class="stat">
+              <span class="material-icons">schedule</span>
+              {{ (image.createdAt || image.uploadedAt) | date: 'short' }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Upload Modal -->
+<div *ngIf="showUploadModal" class="modal-overlay" (click)="closeUploadModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Upload Gallery Image</h2>
+      <button class="btn-close" (click)="closeUploadModal()">
+        <span class="material-icons">close</span>
+      </button>
+    </div>
+
+    <form class="upload-form" (ngSubmit)="uploadImage()">
+      <div class="form-group">
+        <label for="title">Title (Optional)</label>
+        <input 
+          type="text" 
+          id="title" 
+          [(ngModel)]="uploadTitle" 
+          name="title"
+          placeholder="Enter image title"
+          [disabled]="uploading">
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description (Optional)</label>
+        <textarea 
+          id="description" 
+          [(ngModel)]="uploadDescription" 
+          name="description"
+          rows="3"
+          placeholder="Enter image description"
+          [disabled]="uploading"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Image File *</label>
+        <div class="file-upload-area">
+          <input 
+            type="file" 
+            #fileInput 
+            accept="image/*" 
+            (change)="onFileSelected($event)"
+            [disabled]="uploading"
+            title="Select image file"
+            aria-label="Select image file">
+          
+          <div *ngIf="!previewUrl" class="upload-placeholder" (click)="fileInput.click()">
+            <span class="material-icons">cloud_upload</span>
+            <p>Click to select image</p>
+            <span class="hint">PNG, JPG, JPEG up to 10MB</span>
+          </div>
+
+          <div *ngIf="previewUrl" class="image-preview">
+            <img [src]="previewUrl" alt="Preview" title="Preview image">
+            <button type="button" class="btn-remove-image" (click)="removeSelectedFile()" [disabled]="uploading">
+              <span class="material-icons">close</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="errorMessage" class="error-message">
+        <span class="material-icons">error</span>
+        {{ errorMessage }}
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-secondary" (click)="closeUploadModal()" [disabled]="uploading">
+          Cancel
+        </button>
+        <button type="submit" class="btn-primary" [disabled]="!selectedFile || uploading">
+          <span *ngIf="!uploading">Upload</span>
+          <span *ngIf="uploading">Uploading...</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Edit Modal -->
+<div *ngIf="showEditModal" class="modal-overlay" (click)="closeEditModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Edit Image Details</h2>
+      <button class="btn-close" (click)="closeEditModal()">
+        <span class="material-icons">close</span>
+      </button>
+    </div>
+
+    <form class="upload-form" (ngSubmit)="updateImage()">
+      <div class="form-group">
+        <label for="edit-title">Title (Optional)</label>
+        <input 
+          type="text" 
+          id="edit-title" 
+          [(ngModel)]="editTitle" 
+          name="editTitle"
+          placeholder="Enter image title"
+          [disabled]="updating">
+      </div>
+
+      <div class="form-group">
+        <label for="edit-description">Description (Optional)</label>
+        <textarea 
+          id="edit-description" 
+          [(ngModel)]="editDescription" 
+          name="editDescription"
+          rows="3"
+          placeholder="Enter image description"
+          [disabled]="updating"></textarea>
+      </div>
+
+      <div *ngIf="errorMessage" class="error-message">
+        <span class="material-icons">error</span>
+        {{ errorMessage }}
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-secondary" (click)="closeEditModal()" [disabled]="updating">
+          Cancel
+        </button>
+        <button type="submit" class="btn-primary" [disabled]="updating">
+          <span *ngIf="!updating">Update</span>
+          <span *ngIf="updating">Updating...</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -10,6 +10,7 @@ import { AppointmentsListComponent } from './appointments-list/appointments-list
 import { CustomersComponent } from './customers/customers.component';
 import { AppointmentsComponent } from './appointments/appointments.component';
 import { CalendarComponent } from './calendar/calendar.component';
+import { AdminGalleryComponent } from './gallery/gallery.component';
 
 const routes: Routes = [
   {
@@ -29,6 +30,10 @@ const routes: Routes = [
     component: CalendarComponent
   },
   {
+    path: 'gallery',
+    component: AdminGalleryComponent
+  },
+  {
     path: '',
     redirectTo: 'dashboard',
     pathMatch: 'full'
@@ -43,7 +48,8 @@ const routes: Routes = [
     AppointmentsListComponent,
     CustomersComponent,
     AppointmentsComponent,
-    CalendarComponent
+    CalendarComponent,
+    AdminGalleryComponent
   ],
   imports: [
     CommonModule,

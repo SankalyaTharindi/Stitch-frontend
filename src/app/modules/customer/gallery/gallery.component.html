@@ -1,0 +1,80 @@
+<div class="customer-layout">
+  <app-shared-sidebar [title]="'Stitch'" [navItems]="customerNavItems"></app-shared-sidebar>
+  
+  <div class="gallery-container">
+    <div class="page-header">
+      <h1>Gallery</h1>
+      <p class="subtitle">Browse our collection of designed saree jackets</p>
+    </div>
+
+    <div *ngIf="loading" class="loading">
+      <div class="spinner"></div>
+      <p>Loading gallery...</p>
+    </div>
+
+    <div *ngIf="!loading && images.length === 0" class="empty-state">
+      <span class="material-icons empty-icon">collections</span>
+      <h3>No Images Available</h3>
+      <p>Check back soon for our latest designs</p>
+    </div>
+
+    <div *ngIf="!loading && images.length > 0" class="gallery-grid">
+      <div *ngFor="let image of images" class="gallery-item" (click)="openImageModal(image)">
+        <div class="image-wrapper">
+          <img [src]="getImageUrl(image.fileName)" [alt]="image.title || 'Tailored saree jacket design'" [title]="image.title || 'Click to view full image'" (error)="onImageError($event, image)">
+        </div>
+        <div class="image-info">
+          <h3 *ngIf="image.title">{{ image.title }}</h3>
+          <p *ngIf="image.description">{{ image.description }}</p>
+          <div class="image-actions">
+            <button 
+              *ngIf="isAuthenticated"
+              class="btn-like" 
+              [class.liked]="image.likedByCurrentUser"
+              (click)="toggleLike(image); $event.stopPropagation()"
+              [title]="image.likedByCurrentUser ? 'Unlike' : 'Like'">
+              <span class="material-icons">{{ image.likedByCurrentUser ? 'favorite' : 'favorite_border' }}</span>
+              <span>{{ image.likeCount || 0 }}</span>
+            </button>
+            <span *ngIf="!isAuthenticated" class="like-count">
+              <span class="material-icons">favorite</span>
+              {{ image.likeCount || 0 }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Image Viewer Modal -->
+<div *ngIf="showImageModal && selectedImage" class="image-modal-overlay" (click)="closeImageModal()">
+  <div class="image-modal-content" (click)="$event.stopPropagation()">
+    <button class="modal-close-btn" (click)="closeImageModal()">
+      <span class="material-icons">close</span>
+    </button>
+    
+    <div class="modal-image-wrapper">
+      <img [src]="getImageUrl(selectedImage.fileName)" [alt]="selectedImage.title || 'Tailored saree jacket design'" [title]="selectedImage.title || 'Gallery image'">
+    </div>
+    
+    <div class="modal-info">
+      <h2 *ngIf="selectedImage.title">{{ selectedImage.title }}</h2>
+      <p *ngIf="selectedImage.description">{{ selectedImage.description }}</p>
+      <div class="modal-actions">
+        <button 
+          *ngIf="isAuthenticated"
+          class="btn-like-modal" 
+          [class.liked]="selectedImage.likedByCurrentUser"
+          (click)="toggleLike(selectedImage); $event.stopPropagation()">
+          <span class="material-icons">{{ selectedImage.likedByCurrentUser ? 'favorite' : 'favorite_border' }}</span>
+          <span>{{ selectedImage.likeCount || 0 }} likes</span>
+        </button>
+        <span *ngIf="!isAuthenticated" class="like-info">
+          <span class="material-icons">favorite</span>
+          {{ selectedImage.likeCount || 0 }} likes
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

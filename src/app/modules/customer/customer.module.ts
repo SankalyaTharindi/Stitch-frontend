@@ -9,6 +9,7 @@ import { MyAppointmentsComponent } from './my-appointments/my-appointments.compo
 import { OrderStatusComponent } from './order-status/order-status.component';
 import { BookAppointmentPopupComponent } from './book-appointment-popup/book-appointment-popup.component';
 import { BookAppointmentComponent } from './book-appointment/book-appointment.component';
+import { CustomerGalleryComponent } from './gallery/gallery.component';
 
 const routes: Routes = [
   {
@@ -18,6 +19,10 @@ const routes: Routes = [
   {
     path: 'book-appointment',
     component: BookAppointmentComponent
+  },
+  {
+    path: 'gallery',
+    component: CustomerGalleryComponent
   },
   {
     path: '',
@@ -33,7 +38,8 @@ const routes: Routes = [
     MyAppointmentsComponent,
     OrderStatusComponent,
     BookAppointmentPopupComponent,
-    BookAppointmentComponent
+    BookAppointmentComponent,
+    CustomerGalleryComponent
   ],
   imports: [
     CommonModule,
