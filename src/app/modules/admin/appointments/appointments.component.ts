@@ -24,6 +24,13 @@ export class AppointmentsComponent implements OnInit {
   currentAppointmentId: number | null = null;
   imageCache: Map<number, { [index: number]: string }> = new Map();
 
+  // Bill upload properties
+  showBillUploadModal: boolean = false;
+  selectedBillFile: File | null = null;
+  uploadingBill: boolean = false;
+  billErrorMessage: string = '';
+  currentBillAppointment: Appointment | null = null;
+
   adminNavItems: NavItem[] = [
     { label: 'Dashboard', route: '/admin/dashboard', icon: 'dashboard' },
     { label: 'Appointments', route: '/admin/appointments', icon: 'event' },
@@ -42,9 +49,16 @@ export class AppointmentsComponent implements OnInit {
     this.loading = true;
     this.appointmentService.getAllAppointments().subscribe({
       next: (data) => {
-        this.appointments = data.sort((a, b) => 
-          new Date(a.deadline).getTime() - new Date(b.deadline).getTime()
-        );
+        // Sort by ID in descending order (most recently booked first)
+        this.appointments = data.sort((a, b) => (b.id || 0) - (a.id || 0));
+        console.log('Loaded appointments:', this.appointments);
+        const completedApts = this.appointments.filter(a => a.status === 'COMPLETED');
+        console.log('Completed appointments:', completedApts);
+        this.appointments.forEach(apt => {
+          if (apt.status === 'COMPLETED') {
+            console.log(`COMPLETED Appointment ${apt.id}: billFileName="${apt.billFileName}"`);
+          }
+        });
         this.loading = false;
       },
       error: (error) => {
@@ -143,5 +157,106 @@ export class AppointmentsComponent implements OnInit {
   closeImageModal(): void {
     this.showImageModal = false;
     this.modalImageUrl = '';
+  }
+
+  // Bill management methods
+  openBillUploadModal(appointment: Appointment): void {
+    this.currentBillAppointment = appointment;
+    this.showBillUploadModal = true;
+    this.selectedBillFile = null;
+    this.billErrorMessage = '';
+  }
+
+  closeBillUploadModal(): void {
+    this.showBillUploadModal = false;
+    this.currentBillAppointment = null;
+    this.selectedBillFile = null;
+    this.billErrorMessage = '';
+  }
+
+  onBillFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      
+      // Validate file type (PDF, images)
+      const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
+      if (!allowedTypes.includes(file.type)) {
+        this.billErrorMessage = 'Please select a PDF or image file';
+        return;
+      }
+      
+      // Validate file size (10MB)
+      if (file.size > 10 * 1024 * 1024) {
+        this.billErrorMessage = 'File size must be less than 10MB';
+        return;
+      }
+      
+      this.selectedBillFile = file;
+      this.billErrorMessage = '';
+    }
+  }
+
+  uploadBill(): void {
+    if (!this.selectedBillFile || !this.currentBillAppointment?.id) {
+      this.billErrorMessage = 'Please select a file';
+      return;
+    }
+
+    this.uploadingBill = true;
+    this.billErrorMessage = '';
+
+    this.appointmentService.uploadBill(this.currentBillAppointment.id, this.selectedBillFile).subscribe({
+      next: (updatedAppointment) => {
+        console.log('Bill uploaded successfully');
+        // Update the appointment in the list
+        const index = this.appointments.findIndex(a => a.id === updatedAppointment.id);
+        if (index !== -1) {
+          this.appointments[index] = updatedAppointment;
+        }
+        this.uploadingBill = false;
+        this.closeBillUploadModal();
+      },
+      error: (error) => {
+        console.error('Error uploading bill:', error);
+        this.billErrorMessage = 'Failed to upload bill. Please try again.';
+        this.uploadingBill = false;
+      }
+    });
+  }
+
+  viewBill(appointment: Appointment): void {
+    if (!appointment.id) return;
+    
+    this.appointmentService.getBillBlob(appointment.id).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        window.open(url, '_blank');
+        // Clean up after a delay to allow the window to open
+        setTimeout(() => window.URL.revokeObjectURL(url), 100);
+      },
+      error: (error) => {
+        console.error('Error viewing bill:', error);
+      }
+    });
+  }
+
+  deleteBill(appointment: Appointment): void {
+    if (!appointment.id) return;
+    
+    if (confirm('Are you sure you want to delete this bill?')) {
+      this.appointmentService.deleteBill(appointment.id).subscribe({
+        next: (updatedAppointment) => {
+          const index = this.appointments.findIndex(a => a.id === updatedAppointment.id);
+          if (index !== -1) {
+            this.appointments[index] = updatedAppointment;
+          }
+        },
+        error: (error) => {
+          console.error('Error deleting bill:', error);
+          alert('Failed to delete bill');
+        }
+      });
+    }
   }
 }

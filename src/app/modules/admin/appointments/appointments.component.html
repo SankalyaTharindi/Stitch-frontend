@@ -71,6 +71,27 @@
             View Images ({{ getImageCount(appointment.inspoImageUrl || '') }})
           </button>
           <span *ngIf="!hasImages(appointment)" class="no-images">No inspiration pictures</span>
+          
+          <!-- Bill management for completed appointments -->
+          <div *ngIf="appointment.status === 'COMPLETED'" class="bill-actions">
+            <button 
+              *ngIf="!appointment.billFileName" 
+              class="btn-upload-bill" 
+              (click)="openBillUploadModal(appointment)">
+              <span class="material-icons">upload_file</span>
+              Upload Bill
+            </button>
+            
+            <div *ngIf="appointment.billFileName" class="bill-buttons">
+              <button class="btn-view-bill" (click)="viewBill(appointment)">
+                <span class="material-icons">visibility</span>
+                View Bill
+              </button>
+              <button class="btn-delete-bill" (click)="deleteBill(appointment)">
+                <span class="material-icons">delete</span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -105,3 +126,74 @@
     </div>
   </div>
 </div>
+
+<!-- Bill Upload Modal -->
+<div *ngIf="showBillUploadModal" class="modal-overlay" (click)="closeBillUploadModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Upload Bill</h2>
+      <button class="modal-close-btn" (click)="closeBillUploadModal()">
+        <span class="material-icons">close</span>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <p class="modal-subtitle">Customer: {{ currentBillAppointment?.customerName }}</p>
+      
+      <div class="file-upload-area">
+        <input 
+          type="file" 
+          #billFileInput 
+          accept="application/pdf,image/jpeg,image/jpg,image/png" 
+          (change)="onBillFileSelected($event)"
+          [disabled]="uploadingBill"
+          aria-label="Select bill file">
+        
+        <input 
+          type="file" 
+          #billCameraInput 
+          accept="image/*" 
+          capture="environment"
+          (change)="onBillFileSelected($event)"
+          [disabled]="uploadingBill"
+          aria-label="Take photo of bill">
+        
+        <div *ngIf="!selectedBillFile" class="upload-options">
+          <button type="button" class="upload-option-btn" (click)="billFileInput.click()" [disabled]="uploadingBill">
+            <span class="material-icons">upload_file</span>
+            <span>Select File</span>
+          </button>
+          <button type="button" class="upload-option-btn" (click)="billCameraInput.click()" [disabled]="uploadingBill">
+            <span class="material-icons">photo_camera</span>
+            <span>Take Photo</span>
+          </button>
+          <p class="hint">PDF, JPG, PNG up to 10MB</p>
+        </div>
+
+        <div *ngIf="selectedBillFile" class="file-selected">
+          <span class="material-icons">description</span>
+          <span class="file-name">{{ selectedBillFile.name }}</span>
+          <button type="button" class="btn-remove-file" (click)="selectedBillFile = null; billFileInput.value = ''" [disabled]="uploadingBill">
+            <span class="material-icons">close</span>
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="billErrorMessage" class="error-message">
+        <span class="material-icons">error</span>
+        {{ billErrorMessage }}
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-secondary" (click)="closeBillUploadModal()" [disabled]="uploadingBill">
+          Cancel
+        </button>
+        <button class="btn-primary" (click)="uploadBill()" [disabled]="!selectedBillFile || uploadingBill">
+          <span *ngIf="!uploadingBill">Upload</span>
+          <span *ngIf="uploadingBill">Uploading...</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+

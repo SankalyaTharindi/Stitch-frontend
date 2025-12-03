@@ -47,6 +47,10 @@ export class MyAppointmentsComponent {
     return colors[status] || '#6c757d';
   }
 
+  getStatusLabel(status: string): string {
+    return status.replace(/_/g, ' ');
+  }
+
   currentImageIndex = 0;
   totalImages = 0;
   currentAppointmentId: number | null = null;
@@ -113,5 +117,24 @@ export class MyAppointmentsComponent {
   closeImageModal(): void {
     this.showImageModal = false;
     this.modalImageUrl = '';
+  }
+
+  downloadBill(appointment: Appointment): void {
+    if (!appointment.id) return;
+    
+    this.appointmentService.getBillBlob(appointment.id).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `bill_appointment_${appointment.id}.pdf`;
+        link.click();
+        window.URL.revokeObjectURL(url);
+      },
+      error: (error) => {
+        console.error('Error downloading bill:', error);
+        alert('Failed to download bill');
+      }
+    });
   }
 }

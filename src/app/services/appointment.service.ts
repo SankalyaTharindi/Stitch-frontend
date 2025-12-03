@@ -12,6 +12,7 @@ export interface Appointment {
   status: string;
   notes?: string;
   declineReason?: string;
+  billFileName?: string;
 }
 
 @Injectable({
@@ -96,5 +97,26 @@ export class AppointmentService {
   getImageCount(inspoImageUrl: string | undefined): number {
     if (!inspoImageUrl) return 0;
     return inspoImageUrl.split(',').length;
+  }
+
+  // Bill management
+  uploadBill(appointmentId: number, billFile: File): Observable<Appointment> {
+    const formData = new FormData();
+    formData.append('bill', billFile);
+    return this.http.post<Appointment>(`${this.API_URL}/appointments/admin/${appointmentId}/bill`, formData);
+  }
+
+  getBillUrl(appointmentId: number): string {
+    return `${this.API_URL}/appointments/${appointmentId}/bill`;
+  }
+
+  getBillBlob(appointmentId: number): Observable<Blob> {
+    return this.http.get(`${this.API_URL}/appointments/${appointmentId}/bill`, {
+      responseType: 'blob'
+    });
+  }
+
+  deleteBill(appointmentId: number): Observable<Appointment> {
+    return this.http.delete<Appointment>(`${this.API_URL}/appointments/admin/${appointmentId}/bill`);
   }
 }

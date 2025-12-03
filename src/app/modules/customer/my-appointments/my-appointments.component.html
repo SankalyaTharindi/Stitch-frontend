@@ -12,9 +12,9 @@
       <h3>Current Appointments</h3>
       <div class="appointments-grid">
         <div class="appointment-card" *ngFor="let appointment of currentAppointments">
-          <div class="card-header" [style.border-left-color]="getStatusColor(appointment.status)">
+          <div class="card-header">
             <div class="status-badge" [style.background-color]="getStatusColor(appointment.status)">
-              {{ appointment.status }}
+              {{ getStatusLabel(appointment.status) }}
             </div>
           </div>
           
@@ -77,7 +77,7 @@
         <div class="appointment-card past" *ngFor="let appointment of pastAppointments">
           <div class="card-header" [style.border-left-color]="getStatusColor(appointment.status)">
             <div class="status-badge completed">
-              {{ appointment.status }}
+              {{ getStatusLabel(appointment.status) }}
             </div>
           </div>
           
@@ -87,6 +87,25 @@
               <div class="info-content">
                 <span class="label">Completed On</span>
                 <span class="value">{{ appointment.deadline | date:'medium' }}</span>
+              </div>
+            </div>
+            
+            <div class="info-row" *ngIf="appointment.billFileName">
+              <span class="material-icons">receipt</span>
+              <div class="info-content">
+                <span class="label">Bill</span>
+                <button class="btn-download-bill" (click)="downloadBill(appointment)">
+                  <span class="material-icons">download</span>
+                  Download Bill
+                </button>
+              </div>
+            </div>
+            
+            <div class="info-row" *ngIf="!appointment.billFileName">
+              <span class="material-icons">receipt</span>
+              <div class="info-content">
+                <span class="label">Bill</span>
+                <span class="no-bill-text">Bill not yet uploaded</span>
               </div>
             </div>
           </div>

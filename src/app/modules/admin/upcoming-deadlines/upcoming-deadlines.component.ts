@@ -8,4 +8,8 @@ import { Appointment } from '../../../services/appointment.service';
 })
 export class UpcomingDeadlinesComponent {
   @Input() deadlines: Appointment[] = [];
+
+  formatStatus(status: string): string {
+    return status.replace(/_/g, ' ');
+  }
 }

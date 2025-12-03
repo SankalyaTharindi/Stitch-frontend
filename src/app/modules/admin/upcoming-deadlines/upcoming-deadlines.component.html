@@ -10,7 +10,7 @@
         <h4>{{ appointment.customerName }}</h4>
         <p>{{ appointment.phoneNumber }}</p>
         <span class="status-badge" [class]="'status-' + appointment.status.toLowerCase()">
-          {{ appointment.status }}
+          {{ formatStatus(appointment.status) }}
         </span>
       </div>
     </div>

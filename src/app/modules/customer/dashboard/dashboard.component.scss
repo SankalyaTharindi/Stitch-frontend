@@ -9,6 +9,6 @@
 .book-appointment-btn{display:flex;align-items:center;gap:8px;padding:10px 20px;background:linear-gradient(135deg,#d4af37,#f4e5c3,#d4af37);border:none;border-radius:8px;color:#2d010c;font-weight:600;font-size:14px;cursor:pointer;transition:all .2s;.material-icons{font-size:20px}&:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(212,175,55,.4)}}
 .notification-btn{position:relative;border:none;border-radius:999px;padding:8px 12px;background:rgba(40,15,10,.8);color:#d4af37;display:inline-flex;cursor:pointer;transition:background .2s;&:hover{background:rgba(40,15,10,1)}}
 .badge{position:absolute;top:-4px;right:-2px;min-width:18px;height:18px;padding:0 4px;border-radius:999px;background:#d4af37;color:#2d010c;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center}
-.notice-banner{background:rgba(212,175,55,.15);border:1px solid rgba(212,175,55,.3);border-radius:12px;padding:16px 20px;margin-bottom:24px;display:flex;gap:16px;align-items:flex-start;.material-icons{color:#d4af37;font-size:24px;margin-top:2px}}
+.notice-banner{background:rgba(212,175,55,.15);border:1px solid rgba(212,175,55,.3);border-radius:0;padding:16px 20px;margin-bottom:24px;display:flex;gap:16px;align-items:flex-start;.material-icons{color:#d4af37;font-size:24px;margin-top:2px}}
 .notice-content{flex:1;strong{display:block;color:#d4af37;font-size:1rem;margin-bottom:4px}p{color:#f4e5c3;margin:0;font-size:.9rem;line-height:1.5}}
 @media(max-width:900px){.customer-layout{flex-direction:column}.dashboard-container{margin-left:0;padding-top:80px}}

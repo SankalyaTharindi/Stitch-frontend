@@ -1,13 +1,13 @@
-.section{background:rgba(5,2,10,.9);border-radius:14px;padding:20px;margin-bottom:20px;border:1px solid rgba(246,231,193,.18)}
+.section{background:rgba(5,2,10,.9);border-radius:0;padding:20px;margin-bottom:20px;border:1px solid rgba(246,231,193,.18)}
 .section h2{font-size:1.3rem;margin:0 0 16px;color:#f6e7c1}
 .section-header{display:flex;justify-content:space-between;margin-bottom:12px}
 .filters select{padding:.6rem 1rem;border:1px solid rgba(246,231,193,.3);border-radius:8px;background:rgba(6,2,12,.9);color:#f8f5ff;font-size:.9rem;cursor:pointer;option{background:rgba(45,1,12,.95);color:#f8f5ff;&:hover{background:rgba(80,5,20,.95)}}&:focus{outline:none;border-color:#d4af37}}
 .appointments-list{display:grid;gap:1.5rem}
-.appointment-card{background:rgba(40,15,10,.6);padding:1.5rem;border-radius:12px;border:1px solid rgba(212,175,55,.2)}
+.appointment-card{background:rgba(40,15,10,.6);padding:1.5rem;border-radius:0;border:1px solid rgba(212,175,55,.2)}
 .appointment-header{display:flex;justify-content:space-between;margin-bottom:1rem;padding-bottom:1rem;border-bottom:2px solid rgba(212,175,55,.1)}
 .customer-info h3{margin:0;color:#f4e5c3;font-size:1.2rem}
 .customer-info .phone{margin:0;color:#c3b6e6;font-size:.9rem}
-.status{padding:.70rem;border-radius:5px;font-size:.875rem;font-weight:600}
+.status{padding:.70rem;border-radius:0;font-size:.875rem;font-weight:600}
 .status.status-pending{background:#fff3cd;color:#856404}
 .status.status-approved{background:#d4edda;color:#155724}
 .status.status-in_progress{background:#d1ecf1;color:#0c5460}
@@ -44,6 +44,6 @@
 .modal-nav-btn{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.9);border:none;border-radius:50%;width:50px;height:50px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;z-index:10000;.material-icons{font-size:32px;color:#333}&:hover{background:#fff;transform:translateY(-50%) scale(1.1)}}
 .modal-nav-prev{left:20px}
 .modal-nav-next{right:20px}
-.image-counter{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.8);color:#fff;padding:8px 16px;border-radius:20px;font-size:.9rem;font-weight:600;z-index:10000}
+.image-counter{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.8);color:#fff;padding:8px 16px;border-radius:0;font-size:.9rem;font-weight:600;z-index:10000}
 @keyframes fadeIn{0%{opacity:0}100%{opacity:1}}
 @keyframes slideIn{0%{transform:scale(.9);opacity:0}100%{transform:scale(1);opacity:1}}

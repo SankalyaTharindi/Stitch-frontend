@@ -1,5 +1,5 @@
 .stats-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-bottom:24px}
-.stat-card{background:rgba(76, 34, 40, 0.85);padding:16px 18px;border-radius:14px;display:flex;align-items:center;gap:14px;border:1px solid rgba(246,231,193,.18)}
+.stat-card{background:rgba(76, 34, 40, 0.85);padding:16px 18px;border-radius:0;display:flex;align-items:center;gap:14px;border:1px solid rgba(246,231,193,.18)}
 .stat-icon{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(10,6,18,.9)}.stat-icon .material-icons{font-size:32px;color:#f6e7c1}
 .stat-content h3{font-size:1.4rem;font-weight:700;margin:0 0 4px}
 .stat-content p{margin:0;font-size:.85rem;color:#ffffff}
