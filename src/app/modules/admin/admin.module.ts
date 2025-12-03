@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../../shared/shared.module';
 import { AdminDashboardComponent } from './dashboard/dashboard.component';
 import { StatsGridComponent } from './stats-grid/stats-grid.component';
@@ -11,6 +11,7 @@ import { CustomersComponent } from './customers/customers.component';
 import { AppointmentsComponent } from './appointments/appointments.component';
 import { CalendarComponent } from './calendar/calendar.component';
 import { AdminGalleryComponent } from './gallery/gallery.component';
+import { AdminProfileComponent } from './profile/profile.component';
 
 const routes: Routes = [
   {
@@ -34,6 +35,10 @@ const routes: Routes = [
     component: AdminGalleryComponent
   },
   {
+    path: 'profile',
+    component: AdminProfileComponent
+  },
+  {
     path: '',
     redirectTo: 'dashboard',
     pathMatch: 'full'
@@ -49,11 +54,13 @@ const routes: Routes = [
     CustomersComponent,
     AppointmentsComponent,
     CalendarComponent,
-    AdminGalleryComponent
+    AdminGalleryComponent,
+    AdminProfileComponent
   ],
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     SharedModule,
     RouterModule.forChild(routes)
   ]

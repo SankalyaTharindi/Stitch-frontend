@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
 import { CustomerDashboardComponent } from './dashboard/dashboard.component';
@@ -10,6 +10,7 @@ import { OrderStatusComponent } from './order-status/order-status.component';
 import { BookAppointmentPopupComponent } from './book-appointment-popup/book-appointment-popup.component';
 import { BookAppointmentComponent } from './book-appointment/book-appointment.component';
 import { CustomerGalleryComponent } from './gallery/gallery.component';
+import { CustomerProfileComponent } from './profile/profile.component';
 
 const routes: Routes = [
   {
@@ -23,6 +24,10 @@ const routes: Routes = [
   {
     path: 'gallery',
     component: CustomerGalleryComponent
+  },
+  {
+    path: 'profile',
+    component: CustomerProfileComponent
   },
   {
     path: '',
@@ -39,11 +44,13 @@ const routes: Routes = [
     OrderStatusComponent,
     BookAppointmentPopupComponent,
     BookAppointmentComponent,
-    CustomerGalleryComponent
+    CustomerGalleryComponent,
+    CustomerProfileComponent
   ],
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     SharedModule,
     RouterModule.forChild(routes)
   ]

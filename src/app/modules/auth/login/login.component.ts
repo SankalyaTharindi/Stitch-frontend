@@ -73,13 +73,11 @@ export class LoginComponent {
 
     this.authService.login(email, password).subscribe({
       next: (response: AuthResponse) => {
-        console.log('Login response:', response);
-        console.log('User role:', response.user.role);
         this.loading = false;
+        document.body.style.overflow = '';
         const redirectUrl = response.user.role === 'ADMIN' 
           ? '/admin/dashboard' 
           : '/customer/dashboard';
-        console.log('Navigating to:', redirectUrl);
         this.router.navigate([redirectUrl]);
       },
       error: (error: any) => {
@@ -105,8 +103,8 @@ export class LoginComponent {
 
     this.authService.register(formData).subscribe({
       next: (response: AuthResponse) => {
-        console.log('Registration successful:', response);
         this.loading = false;
+        document.body.style.overflow = '';
         const redirectUrl = response.user.role === 'ADMIN' 
           ? '/admin/dashboard' 
           : '/customer/dashboard';

@@ -45,7 +45,8 @@ export class AdminGalleryComponent implements OnInit, OnDestroy {
     { label: 'Appointments', route: '/admin/appointments', icon: 'event' },
     { label: 'Customers', route: '/admin/customers', icon: 'people' },
     { label: 'Calendar', route: '/admin/calendar', icon: 'calendar_today' },
-    { label: 'Gallery', route: '/admin/gallery', icon: 'collections' }
+    { label: 'Gallery', route: '/admin/gallery', icon: 'collections' },
+    { label: 'Profile', route: '/admin/profile', icon: 'person' }
   ];
 
   constructor(private galleryService: GalleryService) {}

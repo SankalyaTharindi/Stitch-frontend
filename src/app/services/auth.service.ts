@@ -86,4 +86,35 @@ export class AuthService {
   hasRole(role: string): boolean {
     return this.currentUserValue?.role === role;
   }
+
+  updateProfile(data: {
+    fullName?: string;
+    email?: string;
+    phoneNumber?: string;
+  }): Observable<User> {
+    return this.http.put<User>(`${this.API_URL}/me`, data)
+      .pipe(
+        tap(user => {
+          localStorage.setItem('currentUser', JSON.stringify(user));
+          this.currentUserSubject.next(user);
+        })
+      );
+  }
+
+  changePassword(oldPassword: string, newPassword: string): Observable<any> {
+    return this.http.put(`${this.API_URL}/change-password`, {
+      oldPassword,
+      newPassword
+    }, { responseType: 'text' });
+  }
+
+  getProfile(): Observable<User> {
+    return this.http.get<User>(`${this.API_URL}/me`)
+      .pipe(
+        tap(user => {
+          localStorage.setItem('currentUser', JSON.stringify(user));
+          this.currentUserSubject.next(user);
+        })
+      );
+  }
 }

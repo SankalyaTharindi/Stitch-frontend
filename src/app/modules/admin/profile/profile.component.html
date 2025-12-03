@@ -1,0 +1,155 @@
+<div class="page-container">
+  <app-shared-sidebar [title]="'Stitch'" [navItems]="adminNavItems"></app-shared-sidebar>
+  
+  <div class="profile-container">
+    <div class="profile-header">
+      <h1>Profile Settings</h1>
+    </div>
+
+  <div class="profile-content">
+    <div class="tabs">
+      <button 
+        [class.active]="activeTab === 'info'" 
+        (click)="setActiveTab('info')">
+        Personal Information
+      </button>
+      <button 
+        [class.active]="activeTab === 'password'" 
+        (click)="setActiveTab('password')">
+        Change Password
+      </button>
+    </div>
+
+    <!-- Personal Information Tab -->
+    <div class="tab-content" *ngIf="activeTab === 'info'">
+      <form [formGroup]="profileForm" (ngSubmit)="updateProfile()">
+        <div class="form-group">
+          <label for="fullName">Full Name</label>
+          <input 
+            type="text" 
+            id="fullName" 
+            formControlName="fullName"
+            [class.error]="profileForm.get('fullName')?.invalid && profileForm.get('fullName')?.touched">
+          <div class="error-message" *ngIf="profileForm.get('fullName')?.invalid && profileForm.get('fullName')?.touched">
+            Full name is required (minimum 2 characters)
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input 
+            type="email" 
+            id="email" 
+            formControlName="email"
+            [class.error]="profileForm.get('email')?.invalid && profileForm.get('email')?.touched">
+          <div class="error-message" *ngIf="profileForm.get('email')?.invalid && profileForm.get('email')?.touched">
+            Please enter a valid email address
+          </div>
+          <div class="info-message" *ngIf="profileForm.get('email')?.value !== user?.email && profileForm.get('email')?.valid">
+            Note: Changing your email will require you to log in again with the new email.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="phoneNumber">Phone Number</label>
+          <input 
+            type="tel" 
+            id="phoneNumber" 
+            formControlName="phoneNumber"
+            [class.error]="profileForm.get('phoneNumber')?.invalid && profileForm.get('phoneNumber')?.touched">
+          <div class="error-message" *ngIf="profileForm.get('phoneNumber')?.invalid && profileForm.get('phoneNumber')?.touched">
+            Please enter a valid phone number (10-15 digits)
+          </div>
+        </div>
+
+        <div class="alert success" *ngIf="profileSuccessMessage">
+          <span class="material-icons">check_circle</span>
+          {{ profileSuccessMessage }}
+        </div>
+
+        <div class="alert error" *ngIf="profileErrorMessage">
+          <span class="material-icons">error</span>
+          {{ profileErrorMessage }}
+        </div>
+
+        <button type="submit" class="btn-primary" [disabled]="profileLoading">
+          {{ profileLoading ? 'Updating...' : 'Update Profile' }}
+        </button>
+      </form>
+    </div>
+
+    <!-- Change Password Tab -->
+    <div class="tab-content" *ngIf="activeTab === 'password'">
+      <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+        <div class="form-group">
+          <label for="currentPassword">Current Password</label>
+          <div class="password-input-wrapper">
+            <input 
+              [type]="showCurrentPassword ? 'text' : 'password'" 
+              id="currentPassword" 
+              formControlName="currentPassword"
+              [class.error]="passwordForm.get('currentPassword')?.invalid && passwordForm.get('currentPassword')?.touched">
+            <button type="button" class="toggle-password" (click)="toggleCurrentPasswordVisibility()">
+              <span class="material-icons">{{ showCurrentPassword ? 'visibility_off' : 'visibility' }}</span>
+            </button>
+          </div>
+          <div class="error-message" *ngIf="passwordForm.get('currentPassword')?.invalid && passwordForm.get('currentPassword')?.touched">
+            Current password is required
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="newPassword">New Password</label>
+          <div class="password-input-wrapper">
+            <input 
+              [type]="showNewPassword ? 'text' : 'password'" 
+              id="newPassword" 
+              formControlName="newPassword"
+              [class.error]="passwordForm.get('newPassword')?.invalid && passwordForm.get('newPassword')?.touched">
+            <button type="button" class="toggle-password" (click)="toggleNewPasswordVisibility()">
+              <span class="material-icons">{{ showNewPassword ? 'visibility_off' : 'visibility' }}</span>
+            </button>
+          </div>
+          <div class="error-message" *ngIf="passwordForm.get('newPassword')?.invalid && passwordForm.get('newPassword')?.touched">
+            Password must be at least 6 characters
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword">Confirm New Password</label>
+          <div class="password-input-wrapper">
+            <input 
+              [type]="showConfirmPassword ? 'text' : 'password'" 
+              id="confirmPassword" 
+              formControlName="confirmPassword"
+              [class.error]="passwordForm.get('confirmPassword')?.invalid && passwordForm.get('confirmPassword')?.touched">
+            <button type="button" class="toggle-password" (click)="toggleConfirmPasswordVisibility()">
+              <span class="material-icons">{{ showConfirmPassword ? 'visibility_off' : 'visibility' }}</span>
+            </button>
+          </div>
+          <div class="error-message" *ngIf="passwordForm.get('confirmPassword')?.invalid && passwordForm.get('confirmPassword')?.touched">
+            Please confirm your new password
+          </div>
+          <div class="error-message" *ngIf="passwordForm.errors?.['mismatch'] && passwordForm.get('confirmPassword')?.touched">
+            Passwords do not match
+          </div>
+        </div>
+
+        <div class="alert success" *ngIf="passwordSuccessMessage">
+          <span class="material-icons">check_circle</span>
+          {{ passwordSuccessMessage }}
+        </div>
+
+        <div class="alert error" *ngIf="passwordErrorMessage">
+          <span class="material-icons">error</span>
+          {{ passwordErrorMessage }}
+        </div>
+
+        <button type="submit" class="btn-primary" [disabled]="passwordLoading">
+          {{ passwordLoading ? 'Changing Password...' : 'Change Password' }}
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+</div>
