@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { GalleryService, GalleryImage } from '../../../services/gallery.service';
 import { AuthService } from '../../../services/auth.service';
 import { interval, Subscription } from 'rxjs';
+import { distinctUntilChanged, skip } from 'rxjs/operators';
 
 interface NavItem {
   label: string;
@@ -28,6 +29,7 @@ export class CustomerGalleryComponent implements OnInit, OnDestroy {
   
   // Auto-refresh
   private refreshSubscription?: Subscription;
+  private authSubscription?: Subscription;
   private readonly REFRESH_INTERVAL = 30000; // 30 seconds
 
   customerNavItems: NavItem[] = [
@@ -45,6 +47,21 @@ export class CustomerGalleryComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.isAuthenticated = !!this.authService.getToken();
     this.loadImages();
+    
+    // Subscribe to auth changes and reload gallery when user changes
+    // Skip initial value and only react to actual changes (login/logout)
+    this.authSubscription = this.authService.currentUser.pipe(
+      skip(1), // Skip the initial value
+      distinctUntilChanged((prev, curr) => prev?.id === curr?.id) // Only when user actually changes
+    ).subscribe(user => {
+      this.isAuthenticated = !!user;
+      // Clear existing images and reload for new user
+      this.images = [];
+      this.imageUrls.forEach(url => URL.revokeObjectURL(url));
+      this.imageUrls.clear();
+      this.loadImages();
+    });
+    
     // Auto-refresh every 30 seconds
     this.refreshSubscription = interval(this.REFRESH_INTERVAL).subscribe(() => {
       this.loadImages();
@@ -88,23 +105,9 @@ export class CustomerGalleryComponent implements OnInit, OnDestroy {
     }
 
     this.galleryService.toggleLike(image.id).subscribe({
-      next: (likeCount) => {
-        // Update the image's like count and liked status
-        image.likeCount = likeCount;
-        image.likedByCurrentUser = !image.likedByCurrentUser;
-        
-        // Update the selectedImage if it's the same image
-        if (this.selectedImage && this.selectedImage.id === image.id) {
-          this.selectedImage.likeCount = likeCount;
-          this.selectedImage.likedByCurrentUser = image.likedByCurrentUser;
-        }
-        
-        // Update the image in the images array
-        const index = this.images.findIndex(img => img.id === image.id);
-        if (index !== -1) {
-          this.images[index].likeCount = likeCount;
-          this.images[index].likedByCurrentUser = image.likedByCurrentUser;
-        }
+      next: () => {
+        // Reload all images from backend to get fresh likedByCurrentUser status
+        this.loadImages();
       },
       error: (error) => {
         console.error('Error toggling like:', error);
@@ -134,9 +137,12 @@ export class CustomerGalleryComponent implements OnInit, OnDestroy {
     // Clean up blob URLs to prevent memory leaks
     this.imageUrls.forEach(url => URL.revokeObjectURL(url));
     this.imageUrls.clear();
-    // Clean up auto-refresh subscription
+    // Clean up subscriptions
     if (this.refreshSubscription) {
       this.refreshSubscription.unsubscribe();
+    }
+    if (this.authSubscription) {
+      this.authSubscription.unsubscribe();
     }
   }
 }

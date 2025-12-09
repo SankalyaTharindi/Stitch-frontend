@@ -13,6 +13,7 @@ export interface Appointment {
   notes?: string;
   declineReason?: string;
   billFileName?: string;
+  measurementsFileName?: string;
 }
 
 @Injectable({
@@ -118,5 +119,22 @@ export class AppointmentService {
 
   deleteBill(appointmentId: number): Observable<Appointment> {
     return this.http.delete<Appointment>(`${this.API_URL}/appointments/admin/${appointmentId}/bill`);
+  }
+
+  // Measurements management
+  uploadMeasurements(appointmentId: number, measurementsFile: File): Observable<Appointment> {
+    const formData = new FormData();
+    formData.append('measurements', measurementsFile);
+    return this.http.post<Appointment>(`${this.API_URL}/appointments/admin/${appointmentId}/measurements`, formData);
+  }
+
+  getMeasurementsBlob(appointmentId: number): Observable<Blob> {
+    return this.http.get(`${this.API_URL}/appointments/${appointmentId}/measurements`, {
+      responseType: 'blob'
+    });
+  }
+
+  deleteMeasurements(appointmentId: number): Observable<Appointment> {
+    return this.http.delete<Appointment>(`${this.API_URL}/appointments/admin/${appointmentId}/measurements`);
   }
 }

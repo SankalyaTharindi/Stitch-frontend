@@ -25,6 +25,10 @@
 .declined-section{margin-top:32px}
 @keyframes fadeIn{0%{opacity:0}100%{opacity:1}}
 @keyframes slideIn{0%{transform:scale(.9);opacity:0}100%{transform:scale(1);opacity:1}}
+.measurements-actions-card{margin-top:8px;padding-top:8px;border-top:1px solid rgba(212,175,55,.1);display:flex;flex-direction:column;gap:8px}
+.measurements-buttons-card{display:flex;gap:8px}
+.btn-view-measurements-card{display:flex;align-items:center;gap:6px;padding:6px 12px;background:#a855f7;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:.8rem;font-weight:600;flex:1;transition:all .2s;.material-icons{font-size:16px}&:hover{background:#9333ea;transform:translateY(-1px)}}
+.btn-delete-measurements-card{display:flex;align-items:center;justify-content:center;padding:6px 10px;background:#dc3545;color:#fff;border:none;border-radius:6px;cursor:pointer;transition:all .2s;.material-icons{font-size:16px}&:hover{background:#c82333;transform:translateY(-1px)}}
 .bill-actions-card{margin-top:8px;padding-top:8px;border-top:1px solid rgba(212,175,55,.1);display:flex;flex-direction:column;gap:8px}
 .btn-upload-bill-card{display:flex;align-items:center;gap:6px;padding:6px 12px;background:#17a2b8;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:.8rem;font-weight:600;transition:all .2s;.material-icons{font-size:16px}&:hover{background:#138496;transform:translateY(-1px)}}
 .bill-buttons-card{display:flex;gap:8px}

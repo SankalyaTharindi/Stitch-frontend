@@ -31,6 +31,13 @@ export class AppointmentsComponent implements OnInit {
   billErrorMessage: string = '';
   currentBillAppointment: Appointment | null = null;
 
+  // Measurements upload properties
+  showMeasurementsUploadModal: boolean = false;
+  selectedMeasurementsFile: File | null = null;
+  uploadingMeasurements: boolean = false;
+  measurementsErrorMessage: string = '';
+  currentMeasurementsAppointment: Appointment | null = null;
+
   adminNavItems: NavItem[] = [
     { label: 'Dashboard', route: '/admin/dashboard', icon: 'dashboard' },
     { label: 'Appointments', route: '/admin/appointments', icon: 'event' },
@@ -256,6 +263,107 @@ export class AppointmentsComponent implements OnInit {
         error: (error) => {
           console.error('Error deleting bill:', error);
           alert('Failed to delete bill');
+        }
+      });
+    }
+  }
+
+  // Measurements management methods
+  openMeasurementsUploadModal(appointment: Appointment): void {
+    this.currentMeasurementsAppointment = appointment;
+    this.showMeasurementsUploadModal = true;
+    this.selectedMeasurementsFile = null;
+    this.measurementsErrorMessage = '';
+  }
+
+  closeMeasurementsUploadModal(): void {
+    this.showMeasurementsUploadModal = false;
+    this.currentMeasurementsAppointment = null;
+    this.selectedMeasurementsFile = null;
+    this.measurementsErrorMessage = '';
+  }
+
+  onMeasurementsFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      
+      // Validate file type (PDF, images)
+      const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
+      if (!allowedTypes.includes(file.type)) {
+        this.measurementsErrorMessage = 'Please select a PDF or image file';
+        return;
+      }
+      
+      // Validate file size (10MB)
+      if (file.size > 10 * 1024 * 1024) {
+        this.measurementsErrorMessage = 'File size must be less than 10MB';
+        return;
+      }
+      
+      this.selectedMeasurementsFile = file;
+      this.measurementsErrorMessage = '';
+    }
+  }
+
+  uploadMeasurements(): void {
+    if (!this.selectedMeasurementsFile || !this.currentMeasurementsAppointment?.id) {
+      this.measurementsErrorMessage = 'Please select a file';
+      return;
+    }
+
+    this.uploadingMeasurements = true;
+    this.measurementsErrorMessage = '';
+
+    this.appointmentService.uploadMeasurements(this.currentMeasurementsAppointment.id, this.selectedMeasurementsFile).subscribe({
+      next: (updatedAppointment) => {
+        console.log('Measurements uploaded successfully');
+        // Update the appointment in the list
+        const index = this.appointments.findIndex(a => a.id === updatedAppointment.id);
+        if (index !== -1) {
+          this.appointments[index] = updatedAppointment;
+        }
+        this.uploadingMeasurements = false;
+        this.closeMeasurementsUploadModal();
+      },
+      error: (error) => {
+        console.error('Error uploading measurements:', error);
+        this.measurementsErrorMessage = 'Failed to upload measurements. Please try again.';
+        this.uploadingMeasurements = false;
+      }
+    });
+  }
+
+  viewMeasurements(appointment: Appointment): void {
+    if (!appointment.id) return;
+    
+    this.appointmentService.getMeasurementsBlob(appointment.id).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        window.open(url, '_blank');
+        // Clean up after a delay to allow the window to open
+        setTimeout(() => window.URL.revokeObjectURL(url), 100);
+      },
+      error: (error) => {
+        console.error('Error viewing measurements:', error);
+      }
+    });
+  }
+
+  deleteMeasurements(appointment: Appointment): void {
+    if (!appointment.id) return;
+    
+    if (confirm('Are you sure you want to delete this measurements file?')) {
+      this.appointmentService.deleteMeasurements(appointment.id).subscribe({
+        next: (updatedAppointment) => {
+          const index = this.appointments.findIndex(a => a.id === updatedAppointment.id);
+          if (index !== -1) {
+            this.appointments[index] = updatedAppointment;
+          }
+        },
+        error: (error) => {
+          console.error('Error deleting measurements:', error);
+          alert('Failed to delete measurements');
         }
       });
     }

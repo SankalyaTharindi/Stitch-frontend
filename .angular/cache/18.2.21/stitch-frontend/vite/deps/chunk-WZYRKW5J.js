@@ -2,13 +2,11 @@ import {
   BehaviorSubject,
   Subject,
   Subscription,
+  __spreadProps,
+  __spreadValues,
   first,
   map
-} from "./chunk-QYZCK3CB.js";
-import {
-  __spreadProps,
-  __spreadValues
-} from "./chunk-EPAV4CNQ.js";
+} from "./chunk-4GNDKFTC.js";
 
 // node_modules/@angular/core/fesm2022/primitives/signals.mjs
 function defaultEquals(a, b) {
@@ -24553,4 +24551,4 @@ export {
    * found in the LICENSE file at https://angular.dev/license
    *)
 */
-//# sourceMappingURL=chunk-F2O6KAM5.js.map
+//# sourceMappingURL=chunk-WZYRKW5J.js.map

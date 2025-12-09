@@ -297,4 +297,39 @@ export class AdminDashboardComponent implements OnInit {
       });
     }
   }
+
+  // Measurements management methods
+  viewMeasurements(appointment: Appointment): void {
+    if (!appointment.id) return;
+    
+    this.appointmentService.getMeasurementsBlob(appointment.id).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        window.open(url, '_blank');
+        setTimeout(() => window.URL.revokeObjectURL(url), 100);
+      },
+      error: (error) => {
+        console.error('Error viewing measurements:', error);
+      }
+    });
+  }
+
+  deleteMeasurements(appointment: Appointment): void {
+    if (!appointment.id) return;
+    
+    if (confirm('Are you sure you want to delete this measurements file?')) {
+      this.appointmentService.deleteMeasurements(appointment.id).subscribe({
+        next: (updatedAppointment) => {
+          const index = this.appointments.findIndex(a => a.id === updatedAppointment.id);
+          if (index !== -1) {
+            this.appointments[index] = updatedAppointment;
+          }
+        },
+        error: (error) => {
+          console.error('Error deleting measurements:', error);
+          alert('Failed to delete measurements');
+        }
+      });
+    }
+  }
 }

@@ -72,6 +72,27 @@
           </button>
           <span *ngIf="!hasImages(appointment)" class="no-images">No inspiration pictures</span>
           
+          <!-- Measurements management -->
+          <div *ngIf="appointment.status !== 'DECLINED'" class="measurements-actions">
+            <button 
+              *ngIf="!appointment.measurementsFileName" 
+              class="btn-upload-measurements" 
+              (click)="openMeasurementsUploadModal(appointment)">
+              <span class="material-icons">straighten</span>
+              Upload Measurements
+            </button>
+            
+            <div *ngIf="appointment.measurementsFileName" class="measurements-buttons">
+              <button class="btn-view-measurements" (click)="viewMeasurements(appointment)">
+                <span class="material-icons">visibility</span>
+                View Measurements
+              </button>
+              <button class="btn-delete-measurements" (click)="deleteMeasurements(appointment)">
+                <span class="material-icons">delete</span>
+              </button>
+            </div>
+          </div>
+
           <!-- Bill management for completed appointments -->
           <div *ngIf="appointment.status === 'COMPLETED'" class="bill-actions">
             <button 
@@ -123,6 +144,76 @@
         [disabled]="currentImageIndex === totalImages - 1">
         <span class="material-icons">chevron_right</span>
       </button>
+    </div>
+  </div>
+</div>
+
+<!-- Measurements Upload Modal -->
+<div *ngIf="showMeasurementsUploadModal" class="modal-overlay" (click)="closeMeasurementsUploadModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Upload Measurements</h2>
+      <button class="modal-close-btn" (click)="closeMeasurementsUploadModal()">
+        <span class="material-icons">close</span>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <p class="modal-subtitle">Customer: {{ currentMeasurementsAppointment?.customerName }}</p>
+      
+      <div class="file-upload-area">
+        <input 
+          type="file" 
+          #measurementsFileInput 
+          accept="application/pdf,image/jpeg,image/jpg,image/png" 
+          (change)="onMeasurementsFileSelected($event)"
+          [disabled]="uploadingMeasurements"
+          aria-label="Select measurements file">
+        
+        <input 
+          type="file" 
+          #measurementsCameraInput 
+          accept="image/*" 
+          capture="environment"
+          (change)="onMeasurementsFileSelected($event)"
+          [disabled]="uploadingMeasurements"
+          aria-label="Take photo of measurements">
+        
+        <div *ngIf="!selectedMeasurementsFile" class="upload-options">
+          <button type="button" class="upload-option-btn" (click)="measurementsFileInput.click()" [disabled]="uploadingMeasurements">
+            <span class="material-icons">upload_file</span>
+            <span>Select File</span>
+          </button>
+          <button type="button" class="upload-option-btn" (click)="measurementsCameraInput.click()" [disabled]="uploadingMeasurements">
+            <span class="material-icons">photo_camera</span>
+            <span>Take Photo</span>
+          </button>
+          <p class="hint">PDF, JPG, PNG up to 10MB</p>
+        </div>
+
+        <div *ngIf="selectedMeasurementsFile" class="file-selected">
+          <span class="material-icons">description</span>
+          <span class="file-name">{{ selectedMeasurementsFile.name }}</span>
+          <button type="button" class="btn-remove-file" (click)="selectedMeasurementsFile = null; measurementsFileInput.value = ''" [disabled]="uploadingMeasurements">
+            <span class="material-icons">close</span>
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="measurementsErrorMessage" class="error-message">
+        <span class="material-icons">error</span>
+        {{ measurementsErrorMessage }}
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-secondary" (click)="closeMeasurementsUploadModal()" [disabled]="uploadingMeasurements">
+          Cancel
+        </button>
+        <button class="btn-primary" (click)="uploadMeasurements()" [disabled]="!selectedMeasurementsFile || uploadingMeasurements">
+          <span *ngIf="!uploadingMeasurements">Upload</span>
+          <span *ngIf="uploadingMeasurements">Uploading...</span>
+        </button>
+      </div>
     </div>
   </div>
 </div>

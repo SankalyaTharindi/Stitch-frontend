@@ -36,7 +36,9 @@ export class GalleryService {
 
   // Public: Get all gallery images
   getAllImages(): Observable<GalleryImage[]> {
-    return this.http.get<GalleryImage[]>(`${this.API_URL}/gallery`);
+    // Add timestamp to prevent browser caching of like status
+    const timestamp = new Date().getTime();
+    return this.http.get<GalleryImage[]>(`${this.API_URL}/gallery?_t=${timestamp}`);
   }
 
   // Public: Get single gallery image details
