@@ -73,12 +73,18 @@ export class LoginComponent {
 
     this.authService.login(email, password).subscribe({
       next: (response: AuthResponse) => {
+        console.log('Login successful, user role:', response.user.role);
+        console.log('Token stored:', localStorage.getItem('token'));
+        console.log('User stored:', localStorage.getItem('currentUser'));
         this.loading = false;
         document.body.style.overflow = '';
         const redirectUrl = response.user.role === 'ADMIN' 
           ? '/admin/dashboard' 
           : '/customer/dashboard';
-        this.router.navigate([redirectUrl]);
+        console.log('Navigating to:', redirectUrl);
+        this.router.navigate([redirectUrl]).then(success => {
+          console.log('Navigation success:', success);
+        });
       },
       error: (error: any) => {
         console.error('Login error:', error);

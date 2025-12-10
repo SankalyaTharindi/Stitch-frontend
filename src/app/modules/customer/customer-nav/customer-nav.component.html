@@ -15,5 +15,9 @@
       <span class="material-icons icon">collections</span>
       <span>Gallery</span>
     </li>
+    <li class="nav-item" [class.active]="isActive('/customer/messages')" (click)="navigate('/customer/messages')">
+      <span class="material-icons icon">message</span>
+      <span>Messages</span>
+    </li>
   </ul>
 </nav>

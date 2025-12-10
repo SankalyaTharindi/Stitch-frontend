@@ -11,6 +11,7 @@ import { BookAppointmentPopupComponent } from './book-appointment-popup/book-app
 import { BookAppointmentComponent } from './book-appointment/book-appointment.component';
 import { CustomerGalleryComponent } from './gallery/gallery.component';
 import { CustomerProfileComponent } from './profile/profile.component';
+import { MessagesComponent } from './messages/messages.component';
 
 const routes: Routes = [
   {
@@ -24,6 +25,10 @@ const routes: Routes = [
   {
     path: 'gallery',
     component: CustomerGalleryComponent
+  },
+  {
+    path: 'messages',
+    component: MessagesComponent
   },
   {
     path: 'profile',
@@ -45,7 +50,8 @@ const routes: Routes = [
     BookAppointmentPopupComponent,
     BookAppointmentComponent,
     CustomerGalleryComponent,
-    CustomerProfileComponent
+    CustomerProfileComponent,
+    MessagesComponent
   ],
   imports: [
     CommonModule,

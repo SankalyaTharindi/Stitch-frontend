@@ -15,6 +15,7 @@ export class CustomerProfileComponent implements OnInit {
     { label: 'Dashboard', route: '/customer/dashboard', icon: 'dashboard' },
     { label: 'Book Appointment', route: '/customer/book-appointment', icon: 'event_available' },
     { label: 'Gallery', route: '/customer/gallery', icon: 'collections' },
+    { label: 'Messages', route: '/customer/messages', icon: 'message' },
     { label: 'Profile', route: '/customer/profile', icon: 'person' }
   ];
   profileForm: FormGroup;

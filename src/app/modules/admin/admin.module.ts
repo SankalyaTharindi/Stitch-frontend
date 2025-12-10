@@ -12,6 +12,7 @@ import { AppointmentsComponent } from './appointments/appointments.component';
 import { CalendarComponent } from './calendar/calendar.component';
 import { AdminGalleryComponent } from './gallery/gallery.component';
 import { AdminProfileComponent } from './profile/profile.component';
+import { MessagesComponent } from './messages/messages.component';
 
 const routes: Routes = [
   {
@@ -35,6 +36,10 @@ const routes: Routes = [
     component: AdminGalleryComponent
   },
   {
+    path: 'messages',
+    component: MessagesComponent
+  },
+  {
     path: 'profile',
     component: AdminProfileComponent
   },
@@ -55,7 +60,8 @@ const routes: Routes = [
     AppointmentsComponent,
     CalendarComponent,
     AdminGalleryComponent,
-    AdminProfileComponent
+    AdminProfileComponent,
+    MessagesComponent
   ],
   imports: [
     CommonModule,
