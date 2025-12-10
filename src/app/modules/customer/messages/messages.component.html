@@ -1,0 +1,57 @@
+<div class="customer-layout">
+  <app-customer-nav></app-customer-nav>
+  
+  <div class="messages-container">
+    <div class="messages-header">
+      <h1>Messages</h1>
+      <div *ngIf="admin" class="admin-info">
+        <span class="material-icons">support_agent</span>
+        <span>{{ admin.fullName }}</span>
+      </div>
+    </div>
+
+    <div *ngIf="loading" class="loading">
+      <div class="spinner"></div>
+      <p>Loading messages...</p>
+    </div>
+
+    <div *ngIf="!loading" class="chat-container">
+      <div class="messages-list" #messageContainer>
+        <div *ngIf="messages.length === 0" class="no-messages">
+          <span class="material-icons">chat_bubble_outline</span>
+          <p>No messages yet. Start a conversation!</p>
+        </div>
+
+        <div *ngFor="let message of messages" 
+             class="message" 
+             [class.own-message]="isOwnMessage(message)"
+             [class.other-message]="!isOwnMessage(message)">
+          <div class="message-bubble">
+            <div class="message-header">
+              <span class="sender-name">{{ message.senderName }}</span>
+              <span class="message-time">{{ formatTime(message.timestamp) }}</span>
+            </div>
+            <div class="message-content">{{ message.content }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="message-input-container">
+        <textarea
+          [(ngModel)]="newMessageContent"
+          (keypress)="onKeyPress($event)"
+          placeholder="Type your message..."
+          rows="1"
+          [disabled]="sending"
+          class="message-input">
+        </textarea>
+        <button 
+          (click)="sendMessage()" 
+          [disabled]="!newMessageContent.trim() || sending"
+          class="send-button">
+          <span class="material-icons">send</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

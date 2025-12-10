@@ -17,6 +17,7 @@ export class AdminProfileComponent implements OnInit {
     { label: 'Customers', route: '/admin/customers', icon: 'people' },
     { label: 'Calendar', route: '/admin/calendar', icon: 'calendar_today' },
     { label: 'Gallery', route: '/admin/gallery', icon: 'collections' },
+    { label: 'Messages', route: '/admin/messages', icon: 'message' },
     { label: 'Profile', route: '/admin/profile', icon: 'person' }
   ];
   profileForm: FormGroup;
