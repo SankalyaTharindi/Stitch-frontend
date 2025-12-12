@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService, User } from '../../../services/auth.service';
 import { AppointmentService, Appointment } from '../../../services/appointment.service';
+import { MessageService } from '../../../services/message.service';
 import { NavItem } from '../../../shared/components/sidebar/sidebar.component';
 
 @Component({
@@ -26,12 +27,30 @@ export class CustomerDashboardComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private appointmentService: AppointmentService
+    private appointmentService: AppointmentService,
+    private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
     this.currentUser = this.authService.currentUserValue;
     this.loadAppointments();
+    this.loadUnreadMessageCount();
+  }
+
+  loadUnreadMessageCount(): void {
+    this.messageService.getAdminChatUser().subscribe({
+      next: (admin) => {
+        this.messageService.getChatHistory(admin.id).subscribe({
+          next: (messages) => {
+            const unreadCount = messages.filter(msg => !msg.isRead && msg.receiverId === this.currentUser?.id).length;
+            const messagesNavItem = this.customerNavItems.find(item => item.route === '/customer/messages');
+            if (messagesNavItem && unreadCount > 0) {
+              messagesNavItem.badge = unreadCount;
+            }
+          }
+        });
+      }
+    });
   }
 
   loadAppointments(): void {

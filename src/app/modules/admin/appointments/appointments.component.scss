@@ -1,5 +1,5 @@
 :host{display:block;min-height:100vh;background:linear-gradient(135deg,rgba(45,1,12,.95),rgba(44,1,14,.95));color:#f8f5ff;font-family:system-ui,sans-serif}
-.admin-layout{display:flex;min-height:100vh}
+.admin-layout{display:flex;min-height:100vh;padding-top:70px}
 .appointments-container{flex:1;max-width:1400px;padding:24px;margin:0 auto;margin-left:260px}
 .page-header{margin-bottom:32px}
 .page-header h1{font-size:28px;font-weight:700;color:#f6e7c1;margin:0 0 8px}
@@ -102,5 +102,118 @@
 .nav-btn:disabled{background:#d4af3733;color:#2d010c66;cursor:not-allowed}
 .nav-btn .material-icons{font-size:28px}
 .image-counter{color:#f8f5ff;font-weight:600;font-size:.95rem;min-width:60px;text-align:center}
-@media (max-width:900px){.admin-layout{flex-direction:column}.appointments-container{margin-left:0}}
-@media (max-width:768px){.appointments-grid{grid-template-columns:1fr}.detail-row{grid-template-columns:1fr}}
+// Responsive Design
+@media (max-width: 768px) {
+  .admin-layout {
+    flex-direction: column;
+  }
+
+  .appointments-container {
+    margin-left: 0;
+    padding: 80px 16px 20px;
+  }
+
+  .page-header h1 {
+    font-size: 24px;
+  }
+
+  .appointments-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .detail-row {
+    grid-template-columns: 1fr;
+  }
+
+  .card-footer {
+    .measurements-buttons,
+    .bill-buttons {
+      flex-direction: column;
+      gap: 8px;
+    }
+  }
+
+  .modal-overlay {
+    padding: 1rem;
+  }
+
+  .modal-content {
+    max-width: 100%;
+  }
+
+  .upload-option-btn {
+    width: 100%;
+  }
+
+  .image-modal-overlay {
+    padding: 20px;
+  }
+
+  .modal-close-btn {
+    width: 36px;
+    height: 36px;
+    top: 5px;
+    right: 5px;
+  }
+
+  .modal-nav-btn {
+    width: 40px;
+    height: 40px;
+
+    .material-icons {
+      font-size: 24px;
+    }
+  }
+
+  .modal-nav-prev {
+    left: 10px;
+  }
+
+  .modal-nav-next {
+    right: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .appointments-container {
+    padding: 70px 12px 16px;
+  }
+
+  .page-header h1 {
+    font-size: 20px;
+  }
+
+  .page-header .subtitle {
+    font-size: 0.9rem;
+  }
+
+  .appointment-card {
+    .card-body {
+      padding: 12px;
+    }
+
+    .customer-name {
+      font-size: 1rem;
+    }
+
+    .detail-item {
+      font-size: 0.85rem;
+    }
+  }
+
+  .btn-view-images,
+  .btn-upload-measurements,
+  .btn-upload-bill {
+    padding: 8px 16px;
+    font-size: 0.85rem;
+  }
+
+  .modal-actions {
+    flex-direction: column;
+  }
+
+  .upload-option-btn {
+    padding: 12px 24px;
+  }
+}

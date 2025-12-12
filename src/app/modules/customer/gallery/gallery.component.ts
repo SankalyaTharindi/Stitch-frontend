@@ -1,14 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { GalleryService, GalleryImage } from '../../../services/gallery.service';
+import { MessageService } from '../../../services/message.service';
 import { AuthService } from '../../../services/auth.service';
+import { NavItem } from '../../../shared/components/sidebar/sidebar.component';
 import { interval, Subscription } from 'rxjs';
 import { distinctUntilChanged, skip } from 'rxjs/operators';
-
-interface NavItem {
-  label: string;
-  route: string;
-  icon: string;
-}
 
 @Component({
   selector: 'app-customer-gallery',
@@ -42,12 +38,14 @@ export class CustomerGalleryComponent implements OnInit, OnDestroy {
 
   constructor(
     private galleryService: GalleryService,
-    private authService: AuthService
+    private authService: AuthService,
+    private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
     this.isAuthenticated = !!this.authService.getToken();
     this.loadImages();
+    this.loadUnreadMessageCount();
     
     // Subscribe to auth changes and reload gallery when user changes
     // Skip initial value and only react to actual changes (login/logout)
@@ -66,6 +64,25 @@ export class CustomerGalleryComponent implements OnInit, OnDestroy {
     // Auto-refresh every 30 seconds
     this.refreshSubscription = interval(this.REFRESH_INTERVAL).subscribe(() => {
       this.loadImages();
+    });
+  }
+
+  loadUnreadMessageCount(): void {
+    const currentUser = this.authService.currentUserValue;
+    if (!currentUser) return;
+    
+    this.messageService.getAdminChatUser().subscribe({
+      next: (admin) => {
+        this.messageService.getChatHistory(admin.id).subscribe({
+          next: (messages) => {
+            const unreadCount = messages.filter(msg => !msg.isRead && msg.receiverId === currentUser.id).length;
+            const messagesNavItem = this.customerNavItems.find(item => item.route === '/customer/messages');
+            if (messagesNavItem && unreadCount > 0) {
+              messagesNavItem.badge = unreadCount;
+            }
+          }
+        });
+      }
     });
   }
 

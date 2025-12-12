@@ -1,11 +1,13 @@
 :host{display:block;min-height:100vh;background:linear-gradient(135deg,rgba(45,1,12,.95),rgba(44,1,14,.95));;color:#f8f5ff;font-family:system-ui,sans-serif}
-.admin-layout{display:flex;min-height:100vh}
+.fixed-top-bar{position:fixed;top:0;left:0;right:0;height:70px;background:rgba(18,1,10,.98);border-bottom:1px solid rgba(212,175,55,.3);display:flex;align-items:center;justify-content:space-between;padding:0 20px;z-index:1100;backdrop-filter:blur(10px);box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.hamburger-btn{width:40px;height:40px;background:rgba(212,175,55,.15);border:1px solid rgba(212,175,55,.3);border-radius:8px;cursor:pointer;display:none;flex-direction:column;justify-content:center;align-items:center;gap:6px;padding:8px;transition:all .3s ease;&:hover{background:rgba(212,175,55,.25);border-color:#d4af37}.hamburger-line{width:24px;height:2px;background:#f6e7c1;transition:all .3s ease;border-radius:2px}}
+.admin-layout{display:flex;min-height:100vh;padding-top:70px}
 .dashboard-container{flex:1;max-width:1200px;padding:24px;margin:0 auto;margin-left:260px}
-.top-bar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:24px}
+.top-bar{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:24px}
 .dashboard-header{display:flex;flex-direction:column;gap:6px;color:#f6e7c1}
-.dashboard-header h1{font-size:28px;font-weight:700}
-.header-actions{display:flex;gap:12px}
-.notification-btn{position:relative;border:none;border-radius:999px;padding:8px 12px;background:rgba(5,2,10,.8);color:#f6e7c1;display:inline-flex;cursor:pointer}
+.dashboard-header h1{font-size:28px;font-weight:700;margin:0}
+.header-actions{display:flex;gap:12px;align-items:center}
+.fixed-top-bar .notification-btn{position:relative;border:none;border-radius:8px;padding:8px 12px;background:rgba(212,175,55,.15);border:1px solid rgba(212,175,55,.3);color:#f6e7c1;display:inline-flex;align-items:center;cursor:pointer;transition:all .3s ease;&:hover{background:rgba(212,175,55,.25);border-color:#d4af37}}
 .badge{position:absolute;top:-4px;right:-2px;min-width:18px;height:18px;padding:0 4px;border-radius:999px;background:#e63946;color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center}
 .card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-top:16px}
 .appointment-card-small{background:rgba(40,15,10,.6);border-radius:0;padding:20px;border:1px solid rgba(212,175,55,.2);transition:transform .2s,box-shadow .2s;display:flex;flex-direction:column;gap:12px;min-height:180px;&:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.3)}&.completed{border:2px solid #28a745;.card-icon{color:#28a745}}&.declined{border:2px solid #dc3545;.card-icon{color:#dc3545}}}
@@ -49,4 +51,134 @@
 .modal-actions{display:flex;gap:12px;justify-content:flex-end;margin-top:24px}
 .btn-cancel{padding:8px 16px;border:1px solid rgba(212,175,55,.3);border-radius:6px;background:transparent;color:#f6e7c1;cursor:pointer;font-size:.9rem;transition:all .2s;&:hover{background:rgba(212,175,55,.1);border-color:#d4af37}&:disabled{opacity:.5;cursor:not-allowed}}
 .btn-upload{padding:8px 16px;border:none;border-radius:6px;background:#d4af37;color:#fff;cursor:pointer;font-size:.9rem;font-weight:600;transition:all .2s;&:hover{background:#c9a132}&:disabled{opacity:.5;cursor:not-allowed}}
-@media(max-width:900px){.admin-layout{flex-direction:column}.dashboard-container{margin-left:0;padding-top:80px}.card-grid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .hamburger-btn {
+    display: flex;
+  }
+
+  .admin-layout {
+    flex-direction: column;
+  }
+
+  .dashboard-container {
+    margin-left: 0;
+    padding: 16px;
+    max-width: 100%;
+  }
+
+  .top-bar {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      margin-left: auto;
+    }
+  }
+
+  .dashboard-header h1 {
+    font-size: 24px;
+  }
+
+  .card-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .appointment-card-small {
+    padding: 16px;
+  }
+
+  .modal-content {
+    min-width: auto;
+    max-width: 90%;
+    padding: 20px;
+    margin: 20px;
+  }
+
+  .upload-option-btn {
+    width: 100%;
+    padding: 14px 24px;
+  }
+
+  .modal-nav-btn {
+    width: 40px;
+    height: 40px;
+
+    .material-icons {
+      font-size: 24px;
+    }
+  }
+
+  .modal-nav-prev {
+    left: 10px;
+  }
+
+  .modal-nav-next {
+    right: 10px;
+  }
+
+  .image-modal-overlay {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-container {
+    padding: 70px 12px 16px;
+  }
+
+  .top-bar {
+    margin-bottom: 16px;
+  }
+
+  .dashboard-header h1 {
+    font-size: 20px;
+  }
+
+  .notification-btn {
+    padding: 6px 10px;
+
+    .material-icons {
+      font-size: 20px;
+    }
+  }
+
+  .card-content {
+    h4 {
+      font-size: 1rem;
+    }
+
+    .phone,
+    .age,
+    .deadline,
+    .reason {
+      font-size: 0.8rem;
+    }
+  }
+
+  .btn-view-card,
+  .btn-view-measurements-card,
+  .btn-view-bill-card {
+    font-size: 0.75rem;
+    padding: 6px 10px;
+  }
+
+  .modal-content {
+    padding: 16px;
+    
+    h2 {
+      font-size: 1.2rem;
+    }
+  }
+
+  .upload-option-btn {
+    padding: 12px 20px;
+    font-size: 0.9rem;
+  }
+}

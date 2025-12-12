@@ -3,4 +3,70 @@
 .stat-icon{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(10,6,18,.9)}.stat-icon .material-icons{font-size:32px;color:#f6e7c1}
 .stat-content h3{font-size:1.4rem;font-weight:700;margin:0 0 4px}
 .stat-content p{margin:0;font-size:.85rem;color:#ffffff}
-@media(max-width:900px){.stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+// Responsive Design
+@media (max-width: 900px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+}
+
+@media (max-width: 600px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .stat-card {
+    padding: 14px 16px;
+  }
+
+  .stat-icon {
+    width: 48px;
+    height: 48px;
+
+    .material-icons {
+      font-size: 28px;
+    }
+  }
+
+  .stat-content {
+    h3 {
+      font-size: 1.2rem;
+    }
+
+    p {
+      font-size: 0.8rem;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-grid {
+    gap: 10px;
+  }
+
+  .stat-card {
+    padding: 12px 14px;
+    gap: 12px;
+  }
+
+  .stat-icon {
+    width: 44px;
+    height: 44px;
+
+    .material-icons {
+      font-size: 24px;
+    }
+  }
+
+  .stat-content {
+    h3 {
+      font-size: 1.1rem;
+    }
+
+    p {
+      font-size: 0.75rem;
+    }
+  }
+}

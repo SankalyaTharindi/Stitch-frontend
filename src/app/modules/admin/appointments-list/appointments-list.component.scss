@@ -47,3 +47,122 @@
 .image-counter{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.8);color:#fff;padding:8px 16px;border-radius:0;font-size:.9rem;font-weight:600;z-index:10000}
 @keyframes fadeIn{0%{opacity:0}100%{opacity:1}}
 @keyframes slideIn{0%{transform:scale(.9);opacity:0}100%{transform:scale(1);opacity:1}}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .section {
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+
+  .section h2 {
+    font-size: 1.1rem;
+  }
+
+  .section-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .filters select {
+    width: 100%;
+  }
+
+  .appointments-list {
+    gap: 1rem;
+  }
+
+  .appointment-card {
+    padding: 1rem;
+  }
+
+  .appointment-details {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .appointment-actions {
+    flex-direction: column;
+    gap: 0.75rem;
+
+    button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  .customer-info h3 {
+    font-size: 1.1rem;
+  }
+
+  .image-modal-overlay {
+    padding: 20px;
+  }
+
+  .modal-nav-btn {
+    width: 40px;
+    height: 40px;
+
+    .material-icons {
+      font-size: 24px;
+    }
+  }
+
+  .modal-nav-prev {
+    left: 10px;
+  }
+
+  .modal-nav-next {
+    right: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .section {
+    padding: 12px;
+  }
+
+  .section h2 {
+    font-size: 1rem;
+  }
+
+  .appointment-card {
+    padding: 0.75rem;
+  }
+
+  .customer-info h3 {
+    font-size: 1rem;
+  }
+
+  .customer-info .phone {
+    font-size: 0.85rem;
+  }
+
+  .status {
+    padding: 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  .appointment-actions button {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .btn-view {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+  }
+
+  .modal-close-btn {
+    width: 36px;
+    height: 36px;
+    top: 5px;
+    right: 5px;
+  }
+
+  .image-counter {
+    font-size: 0.8rem;
+    padding: 6px 12px;
+  }
+}

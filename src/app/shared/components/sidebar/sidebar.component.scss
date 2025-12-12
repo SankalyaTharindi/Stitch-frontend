@@ -1,9 +1,238 @@
-.sidebar{position:fixed;top:0;left:0;width:260px;height:100vh;background:rgba(18,1,10,.96);border-right:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;overflow:hidden;z-index:1000}
-.sidebar-content{padding:24px 20px;display:flex;flex-direction:column;gap:24px;flex:1;overflow:hidden}
-.sidebar-title{font-family:'Monsieur La Doulaise',cursive;font-size:36px;font-weight:400;background:linear-gradient(135deg,#d4af37,#f4e5c3,#d4af37);-webkit-background-clip:text;background-clip:text;color:transparent;margin:0;letter-spacing:.08em}
-.nav-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
-.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;color:#e5d9ff;cursor:pointer;transition:background .18s;.icon{font-size:20px}&:hover{background:rgba(246,231,193,.09)}&.active{background:rgba(246,231,193,.16);color:#f6e7c1}}
-.sidebar-footer{padding:20px;border-top:1px solid rgba(255,255,255,.06)}
-.logout-btn{width:100%;display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;background:transparent;border:1px solid rgba(212,175,55,.3);color:#e5d9ff;cursor:pointer;transition:all .18s;.icon{font-size:20px}&:hover{background:rgba(212,175,55,.15);border-color:#d4af37;color:#f6e7c1}}
-@media(max-width:900px){.sidebar{width:100%;height:auto;flex-direction:row;border-right:none;border-bottom:1px solid rgba(255,255,255,.06);min-height:0;backdrop-filter:blur(10px)}.sidebar-content{flex-direction:row;padding:16px;gap:16px;overflow-x:auto;flex:1;&::-webkit-scrollbar{height:0}}.sidebar-title{font-size:28px}.nav-list{flex-direction:row;flex-wrap:nowrap;gap:4px}.nav-item{flex-shrink:0;padding:8px 12px;span:not(.icon){display:none}}.sidebar-footer{border-top:none;border-left:1px solid rgba(255,255,255,.06);padding:16px}.logout-btn span:not(.icon){display:none}}
-@media(max-width:480px){.sidebar-content{padding:12px}.sidebar-title{font-size:24px}.nav-item{padding:8px 10px;.icon{font-size:18px}}.sidebar-footer{padding:12px}.logout-btn{padding:8px 10px}}
+// Hamburger Menu Button (hidden - now in parent component)
+.hamburger-btn {
+  display: none !important;
+}
+
+// Overlay for mobile
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 999;
+  display: none;
+}
+
+// Close button for mobile sidebar
+.close-sidebar-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 36px;
+  height: 36px;
+  background: rgba(212, 175, 55, 0.2);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 10;
+  color: #d4af37;
+
+  &:hover {
+    background: rgba(212, 175, 55, 0.3);
+    border-color: #d4af37;
+    transform: rotate(90deg);
+  }
+
+  .material-icons {
+    font-size: 24px;
+  }
+}
+
+// Sidebar
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 260px;
+  height: 100vh;
+  background: rgba(18, 1, 10, 0.96);
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 1000;
+  transition: transform 0.3s ease, width 0.3s ease;
+}
+
+.sidebar-content {
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(212, 175, 55, 0.3);
+    border-radius: 4px;
+  }
+}
+
+.sidebar-title {
+  font-family: 'Monsieur La Doulaise', cursive;
+  font-size: 36px;
+  font-weight: 400;
+  background: linear-gradient(135deg, #d4af37, #f4e5c3, #d4af37);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin: 0;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: #e5d9ff;
+  cursor: pointer;
+  transition: background 0.18s;
+  white-space: nowrap;
+  position: relative;
+
+  .icon {
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .nav-label {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+    flex: 1;
+  }
+
+  .nav-badge {
+    background: #d4af37;
+    color: #2d010c;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 10px;
+    min-width: 18px;
+    text-align: center;
+    margin-left: auto;
+  }
+
+  &:hover {
+    background: rgba(246, 231, 193, 0.09);
+  }
+
+  &.active {
+    background: rgba(246, 231, 193, 0.16);
+    color: #f6e7c1;
+  }
+}
+
+.sidebar-footer {
+  padding: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.logout-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: transparent;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  color: #e5d9ff;
+  cursor: pointer;
+  transition: all 0.18s;
+  white-space: nowrap;
+
+  .icon {
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .logout-label {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+  }
+
+  &:hover {
+    background: rgba(212, 175, 55, 0.15);
+    border-color: #d4af37;
+    color: #f6e7c1;
+  }
+}
+
+// Tablet and Mobile Responsive
+@media (max-width: 768px) {
+  .hamburger-btn {
+    display: flex;
+  }
+
+  .sidebar-overlay {
+    display: block;
+  }
+
+  .sidebar {
+    width: 280px;
+    transform: translateX(0);
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.5);
+
+    &.collapsed {
+      transform: translateX(-100%);
+    }
+
+    &.mobile {
+      backdrop-filter: blur(10px);
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebar {
+    width: 260px;
+  }
+
+  .sidebar-content {
+    padding: 20px 16px;
+  }
+
+  .sidebar-title {
+    font-size: 28px;
+  }
+
+  .nav-item {
+    padding: 12px 10px;
+
+    .icon {
+      font-size: 22px;
+    }
+  }
+
+  .sidebar-footer {
+    padding: 16px;
+  }
+
+  .logout-btn {
+    padding: 12px 10px;
+  }
+}

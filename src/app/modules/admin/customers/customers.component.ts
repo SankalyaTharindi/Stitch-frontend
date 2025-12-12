@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { User } from '../../../services/auth.service';
+import { MessageService } from '../../../services/message.service';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, interval, Subscription } from 'rxjs';
 import { NavItem } from '../../../shared/components/sidebar/sidebar.component';
 
 interface Customer extends User {
@@ -15,11 +16,12 @@ interface Customer extends User {
   templateUrl: './customers.component.html',
   styleUrls: ['./customers.component.scss']
 })
-export class CustomersComponent implements OnInit {
+export class CustomersComponent implements OnInit, OnDestroy {
   customers: Customer[] = [];
   filteredCustomers: Customer[] = [];
   loading = true;
   searchTerm = '';
+  private refreshSubscription?: Subscription;
 
   adminNavItems: NavItem[] = [
     { label: 'Dashboard', route: '/admin/dashboard', icon: 'dashboard' },
@@ -31,10 +33,41 @@ export class CustomersComponent implements OnInit {
     { label: 'Profile', route: '/admin/profile', icon: 'person' }
   ];
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private messageService: MessageService
+  ) {}
 
   ngOnInit(): void {
     this.loadCustomers();
+    this.loadUnreadMessageCount();
+    
+    // Subscribe to new messages for real-time updates
+    this.messageService.getNewMessages().subscribe(() => {
+      this.loadUnreadMessageCount();
+    });
+    
+    this.refreshSubscription = interval(30000).subscribe(() => {
+      this.loadUnreadMessageCount();
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.refreshSubscription) {
+      this.refreshSubscription.unsubscribe();
+    }
+  }
+
+  loadUnreadMessageCount(): void {
+    this.messageService.getCustomersWithMessages().subscribe({
+      next: (customers) => {
+        const totalUnread = customers.reduce((sum, customer) => sum + (customer.unreadCount || 0), 0);
+        const messagesNavItem = this.adminNavItems.find(item => item.route === '/admin/messages');
+        if (messagesNavItem) {
+          messagesNavItem.badge = totalUnread > 0 ? totalUnread : undefined;
+        }
+      }
+    });
   }
 
   loadCustomers(): void {

@@ -16,3 +16,207 @@ html, body {
   height: 100%;
   width: 100%;
 }
+
+// Global Fixed Top Bar Styles
+.fixed-top-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background: rgba(18, 1, 10, 0.98);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  z-index: 1100;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.top-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.app-title {
+  font-family: 'Monsieur La Doulaise', cursive;
+  font-size: 2.5rem;
+  font-weight: 550;
+  background: linear-gradient(135deg, #d4af37, #f4e5c3, #d4af37);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 0;
+  letter-spacing: 0.08em;
+
+  @media (max-width: 768px) {
+    font-size: 2rem;
+  }
+}
+
+.hamburger-btn {
+  width: 40px;
+  height: 40px;
+  background: rgba(212, 175, 55, 0.15);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 8px;
+  cursor: pointer;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  padding: 8px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba(212, 175, 55, 0.25);
+    border-color: #d4af37;
+  }
+
+  .hamburger-line {
+    width: 24px;
+    height: 2px;
+    background: #f6e7c1;
+    transition: all 0.3s ease;
+    border-radius: 2px;
+  }
+}
+
+.fixed-top-bar .notification-btn {
+  position: relative;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  background: rgba(212, 175, 55, 0.15);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  color: #f6e7c1;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba(212, 175, 55, 0.25);
+    border-color: #d4af37;
+  }
+
+  .badge {
+    position: absolute;
+    top: -4px;
+    right: -2px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 4px;
+    border-radius: 999px;
+    background: #e63946;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.top-bar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.fixed-top-bar .book-appointment-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #d4af37, #f4e5c3, #d4af37);
+  border: none;
+  border-radius: 8px;
+  color: #2d010c;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  .material-icons {
+    font-size: 18px;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
+  }
+}
+
+// Global Responsive Utilities
+// Ensure all containers respect viewport width
+.admin-layout,
+.customer-layout,
+.page-container {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  padding-top: 70px;
+}
+
+// Universal responsive container rules
+[class*="-container"],
+[class*="-page"] {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+// Responsive layout adjustments
+@media (max-width: 768px) {
+  // Show hamburger button on mobile
+  .hamburger-btn {
+    display: flex !important;
+  }
+
+  // Force all main containers to use full width on mobile
+  [class*="-container"],
+  [class*="-page"],
+  .messages-container,
+  .dashboard-container,
+  .appointments-container,
+  .gallery-container,
+  .calendar-container,
+  .customers-container,
+  .profile-container,
+  .book-appointment-page {
+    margin-left: 0 !important;
+    padding: 16px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  // Ensure message bubbles fit mobile screens
+  .message-bubble,
+  .message {
+    max-width: 100% !important;
+  }
+
+  // Responsive text inputs and textareas
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  textarea,
+  .message-input {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  // Chat and message containers
+  .chat-container,
+  .chat-area,
+  .messages-list {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}

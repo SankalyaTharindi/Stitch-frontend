@@ -1,15 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppointmentService, Appointment } from '../../../services/appointment.service';
 import { AuthService } from '../../../services/auth.service';
+import { MessageService } from '../../../services/message.service';
 import { NavItem } from '../../../shared/components/sidebar/sidebar.component';
+import { interval, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-book-appointment',
   templateUrl: './book-appointment.component.html',
   styleUrls: ['./book-appointment.component.scss']
 })
-export class BookAppointmentComponent implements OnInit {
+export class BookAppointmentComponent implements OnInit, OnDestroy {
+  private refreshSubscription?: Subscription;
   customerNavItems: NavItem[] = [
     { label: 'Dashboard', route: '/customer/dashboard', icon: 'dashboard' },
     { label: 'Book Appointment', route: '/customer/book-appointment', icon: 'event_available' },
@@ -36,7 +39,8 @@ export class BookAppointmentComponent implements OnInit {
   constructor(
     private appointmentService: AppointmentService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
@@ -44,6 +48,37 @@ export class BookAppointmentComponent implements OnInit {
     if (currentUser) {
       this.formData.customerName = currentUser.fullName || '';
     }
+    this.loadUnreadMessageCount();
+    
+    // Refresh unread count every 30 seconds
+    this.refreshSubscription = interval(30000).subscribe(() => {
+      this.loadUnreadMessageCount();
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.refreshSubscription) {
+      this.refreshSubscription.unsubscribe();
+    }
+  }
+
+  loadUnreadMessageCount(): void {
+    const currentUser = this.authService.currentUserValue;
+    if (!currentUser) return;
+    
+    this.messageService.getAdminChatUser().subscribe({
+      next: (admin) => {
+        this.messageService.getChatHistory(admin.id).subscribe({
+          next: (messages) => {
+            const unreadCount = messages.filter(msg => !msg.isRead && msg.receiverId === currentUser.id).length;
+            const messagesNavItem = this.customerNavItems.find(item => item.route === '/customer/messages');
+            if (messagesNavItem) {
+              messagesNavItem.badge = unreadCount > 0 ? unreadCount : undefined;
+            }
+          }
+        });
+      }
+    });
   }
 
   onFileSelected(event: Event): void {

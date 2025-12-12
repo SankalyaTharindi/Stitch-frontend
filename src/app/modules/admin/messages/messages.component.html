@@ -1,5 +1,20 @@
 <div class="admin-layout">
-  <app-shared-sidebar [title]="'Stitch'" [navItems]="adminNavItems"></app-shared-sidebar>
+  <!-- Fixed Top Bar -->
+  <div class="fixed-top-bar">
+    <div class="top-bar-left">
+      <button class="hamburger-btn" (click)="sidebar.toggleSidebar()" [class.active]="!sidebar.isCollapsed">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </button>
+      <h1 class="app-title">Stitch</h1>
+    </div>
+    <button class="notification-btn" aria-label="View notifications">
+      <span class="material-icons">notifications</span>
+    </button>
+  </div>
+
+  <app-shared-sidebar #sidebar [title]="'Stitch'" [navItems]="adminNavItems"></app-shared-sidebar>
   
   <div class="messages-container">
     <div class="messages-header">
@@ -13,7 +28,7 @@
 
     <div *ngIf="!loading" class="chat-layout">
       <!-- Customers List -->
-      <div class="customers-sidebar">
+      <div class="customers-sidebar" [class.mobile-hidden]="selectedCustomer && isMobileView">
         <div class="customers-header">
           <h3>Customers</h3>
           <span class="customer-count">{{ customers.length }}</span>
@@ -51,7 +66,7 @@
       </div>
 
       <!-- Chat Area -->
-      <div class="chat-area">
+      <div class="chat-area" [class.mobile-visible]="selectedCustomer && isMobileView">
         <div *ngIf="!selectedCustomer" class="no-selection">
           <span class="material-icons">chat_bubble_outline</span>
           <p>Select a customer to view messages</p>
@@ -59,6 +74,9 @@
 
         <div *ngIf="selectedCustomer" class="chat-content">
           <div class="chat-header">
+            <button *ngIf="isMobileView" class="back-button" (click)="backToCustomersList()">
+              <span class="material-icons">arrow_back</span>
+            </button>
             <div class="customer-info-header">
               <span class="material-icons">person</span>
               <div>
@@ -84,8 +102,8 @@
                  [class.other-message]="!isOwnMessage(message)">
               <div class="message-bubble">
                 <div class="message-header">
-                  <span class="sender-name">{{ message.senderName }}</span>
-                  <span class="message-time">{{ formatTime(message.timestamp) }}</span>
+                  <span class="sender-name" *ngIf="!isOwnMessage(message)">{{ message.senderName }}</span>
+                  <span class="message-time">{{ formatTime(message.createdAt) }}</span>
                 </div>
                 <div class="message-content">{{ message.content }}</div>
               </div>

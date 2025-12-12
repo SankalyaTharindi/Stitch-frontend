@@ -10,4 +10,93 @@
 .deadline-info{display:flex;align-items:center;gap:12px;padding:16px;background:rgba(0,0,0,.3);border-radius:0;.material-icons{font-size:24px;color:#d4af37}}
 .deadline-label{display:block;font-size:.75rem;color:#c3b6e6;text-transform:uppercase;font-weight:600;margin-bottom:4px}
 .deadline-date{display:block;font-size:1rem;color:#f4e5c3;font-weight:600}
-@media(max-width:768px){.status-steps{grid-template-columns:repeat(2,1fr);gap:24px}.step-icon{width:48px;height:48px;.material-icons{font-size:24px}}}
+// Responsive Design
+@media (max-width: 768px) {
+  .order-status-section {
+    padding: 16px;
+  }
+
+  .section-title {
+    font-size: 1.2rem;
+
+    .material-icons {
+      font-size: 28px;
+    }
+  }
+
+  .status-tracker {
+    padding: 20px 16px;
+  }
+
+  .status-steps {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .step-icon {
+    width: 48px;
+    height: 48px;
+
+    .material-icons {
+      font-size: 24px;
+    }
+  }
+
+  .step-label {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .order-status-section {
+    padding: 12px;
+  }
+
+  .section-title {
+    font-size: 1.1rem;
+    gap: 8px;
+
+    .material-icons {
+      font-size: 24px;
+    }
+  }
+
+  .status-tracker {
+    padding: 16px 12px;
+  }
+
+  .progress-bar {
+    margin-bottom: 24px;
+  }
+
+  .status-steps {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .step-icon {
+    width: 44px;
+    height: 44px;
+
+    .material-icons {
+      font-size: 22px;
+    }
+  }
+
+  .step-label {
+    font-size: 0.75rem;
+  }
+
+  .deadline-info {
+    padding: 12px;
+    gap: 10px;
+
+    .material-icons {
+      font-size: 20px;
+    }
+  }
+
+  .deadline-date {
+    font-size: 0.9rem;
+  }
+}

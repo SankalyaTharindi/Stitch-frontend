@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService, User } from '../../../services/auth.service';
+import { MessageService } from '../../../services/message.service';
 import { NavItem } from '../../../shared/components/sidebar/sidebar.component';
 
 @Component({
@@ -33,7 +34,8 @@ export class CustomerProfileComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private messageService: MessageService
   ) {
     this.profileForm = this.formBuilder.group({
       fullName: ['', [Validators.required, Validators.minLength(2)]],
@@ -57,6 +59,25 @@ export class CustomerProfileComponent implements OnInit {
         phoneNumber: this.user.phoneNumber
       });
     }
+    this.loadUnreadMessageCount();
+  }
+
+  loadUnreadMessageCount(): void {
+    if (!this.user) return;
+    
+    this.messageService.getAdminChatUser().subscribe({
+      next: (admin) => {
+        this.messageService.getChatHistory(admin.id).subscribe({
+          next: (messages) => {
+            const unreadCount = messages.filter(msg => !msg.isRead && msg.receiverId === this.user?.id).length;
+            const messagesNavItem = this.customerNavItems.find(item => item.route === '/customer/messages');
+            if (messagesNavItem && unreadCount > 0) {
+              messagesNavItem.badge = unreadCount;
+            }
+          }
+        });
+      }
+    });
   }
 
   passwordMatchValidator(form: FormGroup) {

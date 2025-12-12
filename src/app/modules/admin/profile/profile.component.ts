@@ -1,15 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService, User } from '../../../services/auth.service';
+import { MessageService } from '../../../services/message.service';
 import { NavItem } from '../../../shared/components/sidebar/sidebar.component';
+import { interval, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-admin-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
-export class AdminProfileComponent implements OnInit {
+export class AdminProfileComponent implements OnInit, OnDestroy {
   user: User | null = null;
+  private refreshSubscription?: Subscription;
   
   adminNavItems: NavItem[] = [
     { label: 'Dashboard', route: '/admin/dashboard', icon: 'dashboard' },
@@ -36,7 +39,8 @@ export class AdminProfileComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private messageService: MessageService
   ) {
     this.profileForm = this.formBuilder.group({
       fullName: ['', [Validators.required, Validators.minLength(2)]],
@@ -60,6 +64,34 @@ export class AdminProfileComponent implements OnInit {
         phoneNumber: this.user.phoneNumber
       });
     }
+    this.loadUnreadMessageCount();
+    
+    // Subscribe to new messages for real-time updates
+    this.messageService.getNewMessages().subscribe(() => {
+      this.loadUnreadMessageCount();
+    });
+    
+    this.refreshSubscription = interval(30000).subscribe(() => {
+      this.loadUnreadMessageCount();
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.refreshSubscription) {
+      this.refreshSubscription.unsubscribe();
+    }
+  }
+
+  loadUnreadMessageCount(): void {
+    this.messageService.getCustomersWithMessages().subscribe({
+      next: (customers) => {
+        const totalUnread = customers.reduce((sum, customer) => sum + (customer.unreadCount || 0), 0);
+        const messagesNavItem = this.adminNavItems.find(item => item.route === '/admin/messages');
+        if (messagesNavItem) {
+          messagesNavItem.badge = totalUnread > 0 ? totalUnread : undefined;
+        }
+      }
+    });
   }
 
   passwordMatchValidator(form: FormGroup) {

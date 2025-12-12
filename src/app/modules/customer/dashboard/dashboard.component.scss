@@ -1,14 +1,109 @@
 :host{display:block;min-height:100vh;background:linear-gradient(135deg,rgba(45,1,12,.95),rgba(44,1,14,.95));color:#f8f5ff;font-family:system-ui,sans-serif}
-.customer-layout{display:flex;min-height:100vh}
+.fixed-top-bar{position:fixed;top:0;left:0;right:0;height:70px;background:rgba(18,1,10,.98);border-bottom:1px solid rgba(212,175,55,.3);display:flex;align-items:center;justify-content:space-between;padding:0 20px;z-index:1100;backdrop-filter:blur(10px);box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.hamburger-btn{width:40px;height:40px;background:rgba(212,175,55,.15);border:1px solid rgba(212,175,55,.3);border-radius:8px;cursor:pointer;display:none;flex-direction:column;justify-content:center;align-items:center;gap:6px;padding:8px;transition:all .3s ease;&:hover{background:rgba(212,175,55,.25);border-color:#d4af37}.hamburger-line{width:24px;height:2px;background:#f6e7c1;transition:all .3s ease;border-radius:2px}}
+.top-bar-actions{display:flex;align-items:center;gap:12px}
+.customer-layout{display:flex;min-height:100vh;padding-top:70px}
 .dashboard-container{flex:1;max-width:1200px;padding:24px;margin:0 auto;margin-left:260px}
-.top-bar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:24px}
+.top-bar{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:24px}
 .dashboard-header{display:flex;flex-direction:column;gap:6px}
 .dashboard-header h1{font-size:28px;font-weight:700;color:#d4af37;margin:0}
 .dashboard-subtitle{color:#c3b6e6;font-size:14px;margin:0}
 .header-actions{display:flex;gap:12px;align-items:center;.book-appointment-btn{margin-left:12px}}
-.book-appointment-btn{display:flex;align-items:center;gap:8px;padding:10px 20px;background:linear-gradient(135deg,#d4af37,#f4e5c3,#d4af37);border:none;border-radius:8px;color:#2d010c;font-weight:600;font-size:14px;cursor:pointer;transition:all .2s;.material-icons{font-size:20px}&:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(212,175,55,.4)}}
-.notification-btn{position:relative;border:none;border-radius:999px;padding:8px 12px;background:rgba(40,15,10,.8);color:#d4af37;display:inline-flex;cursor:pointer;transition:background .2s;&:hover{background:rgba(40,15,10,1)}}
+.fixed-top-bar .book-appointment-btn{display:flex;align-items:center;gap:8px;padding:8px 16px;background:linear-gradient(135deg,#d4af37,#f4e5c3,#d4af37);border:none;border-radius:8px;color:#2d010c;font-weight:600;font-size:13px;cursor:pointer;transition:all .2s;.material-icons{font-size:18px}&:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(212,175,55,.4)}}
+.fixed-top-bar .notification-btn{position:relative;border:none;border-radius:8px;padding:8px 12px;background:rgba(212,175,55,.15);border:1px solid rgba(212,175,55,.3);color:#d4af37;display:inline-flex;align-items:center;cursor:pointer;transition:all .3s ease;&:hover{background:rgba(212,175,55,.25);border-color:#d4af37}}
 .badge{position:absolute;top:-4px;right:-2px;min-width:18px;height:18px;padding:0 4px;border-radius:999px;background:#d4af37;color:#2d010c;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center}
 .notice-banner{background:rgba(212,175,55,.15);border:1px solid rgba(212,175,55,.3);border-radius:0;padding:16px 20px;margin-bottom:24px;display:flex;gap:16px;align-items:flex-start;.material-icons{color:#d4af37;font-size:24px;margin-top:2px}}
 .notice-content{flex:1;strong{display:block;color:#d4af37;font-size:1rem;margin-bottom:4px}p{color:#f4e5c3;margin:0;font-size:.9rem;line-height:1.5}}
-@media(max-width:900px){.customer-layout{flex-direction:column}.dashboard-container{margin-left:0;padding-top:80px}}
+// Responsive Design
+@media (max-width: 768px) {
+  .hamburger-btn {
+    display: flex;
+  }
+
+  .customer-layout {
+    flex-direction: column;
+  }
+
+  .dashboard-container {
+    margin-left: 0;
+    padding: 16px;
+  }
+
+  .top-bar {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: auto;
+
+      .book-appointment-btn {
+        margin-left: 8px;
+      }
+    }
+  }
+
+  .dashboard-header h1 {
+    font-size: 24px;
+  }
+
+  .book-appointment-btn {
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+
+  .notice-banner {
+    padding: 12px 16px;
+    gap: 12px;
+
+    .material-icons {
+      font-size: 20px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-container {
+    padding: 70px 12px 16px;
+  }
+
+  .dashboard-header h1 {
+    font-size: 20px;
+  }
+
+  .dashboard-subtitle {
+    font-size: 12px;
+  }
+
+  .book-appointment-btn {
+    padding: 8px 12px;
+    font-size: 12px;
+    gap: 4px;
+
+    .material-icons {
+      font-size: 18px;
+    }
+  }
+
+  .notification-btn {
+    padding: 6px 10px;
+
+    .material-icons {
+      font-size: 20px;
+    }
+  }
+
+  .notice-content {
+    strong {
+      font-size: 0.9rem;
+    }
+
+    p {
+      font-size: 0.85rem;
+    }
+  }
+}

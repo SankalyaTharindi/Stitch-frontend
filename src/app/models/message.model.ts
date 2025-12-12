@@ -5,8 +5,8 @@ export interface MessageDTO {
   receiverId: number;
   receiverName: string;
   content: string;
-  timestamp: string;
-  read: boolean;
+  createdAt: string;
+  isRead: boolean;
 }
 
 export interface SendMessageRequest {

@@ -1,6 +1,8 @@
 :host {
   display: block;
-  min-height: 100vh;
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
   background: linear-gradient(135deg, rgba(45, 1, 12, 0.95), rgba(44, 1, 14, 0.95));
   color: #f8f5ff;
   font-family: system-ui, sans-serif;
@@ -8,18 +10,25 @@
 
 .admin-layout {
   display: flex;
-  min-height: 100vh;
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+  padding-top: 70px;
 }
 
 .messages-container {
   flex: 1;
+  width: 100%;
   max-width: 1400px;
   padding: 24px;
   margin: 0 auto;
   margin-left: 260px;
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: calc(100vh - 70px);
+  max-height: calc(100vh - 70px);
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .messages-header {
@@ -188,7 +197,7 @@
 
 .customer-last-message {
   font-size: 0.85rem;
-  color: #c3b6e6;
+  color: #c2a6ae;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -280,7 +289,7 @@
 
   .customer-email {
     font-size: 0.85rem;
-    color: #c3b6e6;
+    color: #e0873e;
   }
 }
 
@@ -353,9 +362,10 @@
     justify-content: flex-end;
 
     .message-bubble {
-      background: linear-gradient(135deg, #d4af37, #f4e5c3, #d4af37);
+      background: linear-gradient(#d4af37, #f4e5c3, #d4af37);
       color: #2d010c;
-      border-radius: 18px 18px 4px 18px;
+      border-radius: 18px 18px 18px 4px;
+      border: 1px solid rgba(212, 175, 55, 0.2);
 
       .sender-name {
         color: #2d010c;
@@ -397,7 +407,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 6px;
   gap: 12px;
 
   .sender-name {
@@ -409,6 +418,15 @@
     font-size: 0.75rem;
     white-space: nowrap;
   }
+}
+
+.own-message .message-header {
+  justify-content: flex-end;
+  margin-bottom: 0;
+}
+
+.other-message .message-header {
+  margin-bottom: 6px;
 }
 
 .message-content {
@@ -424,6 +442,8 @@
   padding: 20px;
   background: rgba(0, 0, 0, 0.3);
   border-top: 1px solid rgba(246, 231, 193, 0.18);
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .message-input {
@@ -438,6 +458,8 @@
   resize: none;
   max-height: 120px;
   transition: border-color 0.3s;
+  width: 100%;
+  box-sizing: border-box;
 
   &:focus {
     outline: none;
@@ -483,55 +505,101 @@
   }
 }
 
-@media (max-width: 1200px) {
-  .messages-container {
-    margin-left: 0;
-    max-width: 100%;
-  }
-
-  .customers-sidebar {
-    width: 280px;
-  }
-}
-
-@media (max-width: 900px) {
+@media (max-width: 768px) {
   .admin-layout {
     flex-direction: column;
   }
 
   .messages-container {
-    padding: 16px;
-    margin-top: 80px;
-  }
-
-  .chat-layout {
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .customers-sidebar {
-    width: 100%;
-    max-height: 300px;
-    order: -1;
-  }
-
-  .customers-list {
-    max-height: 250px;
-  }
-}
-
-@media (max-width: 768px) {
-  .messages-container {
-    padding: 12px;
+    margin-left: 0;
+    padding: 80px 12px 12px;
     height: calc(100vh - 80px);
+    max-width: 100%;
   }
 
   .messages-header h1 {
     font-size: 22px;
   }
 
+  .chat-layout {
+    position: relative;
+    flex-direction: row;
+    gap: 0;
+    height: 100%;
+    overflow: hidden;
+  }
+
   .customers-sidebar {
-    max-height: 250px;
+    width: 100%;
+    max-height: none;
+    min-height: auto;
+    height: 100%;
+    order: 0;
+    position: relative;
+    transition: transform 0.3s ease;
+
+    &.mobile-hidden {
+      transform: translateX(-100%);
+      position: absolute;
+      pointer-events: none;
+    }
+  }
+
+  .customers-list {
+    max-height: calc(100vh - 280px);
+    overflow-y: auto;
+  }
+
+  .chat-area {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    background: linear-gradient(135deg, rgba(45, 1, 12, 0.95), rgba(44, 1, 14, 0.95));
+
+    &.mobile-visible {
+      transform: translateX(0);
+    }
+  }
+
+  .back-button {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(212, 175, 55, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    color: #d4af37;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    z-index: 10;
+
+    &:hover {
+      background: rgba(212, 175, 55, 0.3);
+      border-color: #d4af37;
+    }
+
+    .material-icons {
+      font-size: 24px;
+    }
+  }
+
+  .chat-header {
+    padding: 16px;
+    position: relative;
+  }
+
+  .customer-info-header {
+    margin-left: 48px;
   }
 
   .customer-item {
@@ -568,24 +636,36 @@
     padding: 10px 14px;
   }
 
-  .message-header {
+  .other-message .message-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 4px;
   }
 
+  .own-message .message-header {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+  }
+
   .messages-list {
-    padding: 16px;
+    padding: 16px 8px;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .message-input-container {
     padding: 12px;
     gap: 8px;
+    width: 100%;
+    max-width: 100%;
   }
 
   .message-input {
     font-size: 0.9rem;
     padding: 10px 16px;
+    width: 100%;
+    max-width: 100%;
   }
 
   .send-button {
@@ -613,8 +693,12 @@
   }
 
   .message-bubble {
-    max-width: 90%;
+    max-width: 92%;
     font-size: 0.9rem;
+  }
+
+  .messages-list {
+    padding: 12px 6px;
   }
 
   .no-selection p,

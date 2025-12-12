@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { MessageService } from '../../../services/message.service';
 import { AuthService } from '../../../services/auth.service';
 import { MessageDTO, ChatUserDTO, SendMessageRequest } from '../../../models/message.model';
@@ -25,6 +25,7 @@ export class MessagesComponent implements OnInit, OnDestroy {
   loading: boolean = true;
   loadingMessages: boolean = false;
   sending: boolean = false;
+  isMobileView: boolean = false;
   
   private newMessageSubscription?: Subscription;
   private currentUserId: number | null = null;
@@ -42,7 +43,22 @@ export class MessagesComponent implements OnInit, OnDestroy {
   constructor(
     private messageService: MessageService,
     private authService: AuthService
-  ) {}
+  ) {
+    this.checkMobileView();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.checkMobileView();
+  }
+
+  checkMobileView() {
+    this.isMobileView = window.innerWidth <= 768;
+  }
+
+  backToCustomersList() {
+    this.selectedCustomer = null;
+  }
 
   ngOnInit(): void {
     const user = this.authService.currentUserValue;
@@ -58,18 +74,42 @@ export class MessagesComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.messageService.getCustomersWithMessages().subscribe({
       next: (customers) => {
-        this.customers = customers;
-        this.loading = false;
+        // Load last message for each customer if not provided by backend
+        customers.forEach(customer => {
+          if (!customer.lastMessage) {
+            this.messageService.getChatHistory(customer.id).subscribe({
+              next: (messages) => {
+                if (messages.length > 0) {
+                  const lastMsg = messages[messages.length - 1];
+                  customer.lastMessage = lastMsg.content;
+                  customer.lastMessageTime = lastMsg.createdAt;
+                  // Re-sort after loading messages
+                  this.sortCustomersByRecentMessage();
+                }
+              },
+              error: (error) => {
+                console.error(`Error loading messages for customer ${customer.id}:`, error);
+              }
+            });
+          }
+        });
         
-        // Auto-select first customer if available
-        if (customers.length > 0 && !this.selectedCustomer) {
-          this.selectCustomer(customers[0]);
-        }
+        this.customers = customers;
+        this.sortCustomersByRecentMessage();
+        this.loading = false;
       },
       error: (error) => {
         console.error('Error loading customers:', error);
         this.loading = false;
       }
+    });
+  }
+
+  sortCustomersByRecentMessage(): void {
+    this.customers.sort((a, b) => {
+      const timeA = a.lastMessageTime ? new Date(a.lastMessageTime).getTime() : 0;
+      const timeB = b.lastMessageTime ? new Date(b.lastMessageTime).getTime() : 0;
+      return timeB - timeA; // Most recent first
     });
   }
 
@@ -82,6 +122,13 @@ export class MessagesComponent implements OnInit, OnDestroy {
     this.loadingMessages = true;
     this.messageService.getChatHistory(customerId).subscribe({
       next: (messages) => {
+        console.log('Admin messages received:', messages);
+        if (messages.length > 0) {
+          console.log('First message structure:', messages[0]);
+          console.log('First message keys:', Object.keys(messages[0]));
+          console.log('First message timestamp:', messages[0].createdAt);
+          console.log('All fields:', JSON.stringify(messages[0], null, 2));
+        }
         this.messages = messages;
         this.loadingMessages = false;
         this.scrollToBottom();
@@ -120,6 +167,14 @@ export class MessagesComponent implements OnInit, OnDestroy {
           this.messages.push(message);
           this.scrollToBottom();
           this.messageService.markMessagesAsRead(this.selectedCustomer.id).subscribe();
+          
+          // Update last message time and re-sort
+          const customer = this.customers.find(c => c.id === this.selectedCustomer!.id);
+          if (customer) {
+            customer.lastMessage = message.content;
+            customer.lastMessageTime = message.createdAt;
+            this.sortCustomersByRecentMessage();
+          }
         } else {
           console.log('Message is from another customer or first message');
           // Update customer list to show new unread message
@@ -128,11 +183,21 @@ export class MessagesComponent implements OnInit, OnDestroy {
             console.log('Updating existing customer in list');
             customer.unreadCount = (customer.unreadCount || 0) + 1;
             customer.lastMessage = message.content;
-            customer.lastMessageTime = message.timestamp;
+            customer.lastMessageTime = message.createdAt;
+            // Sort to move this customer to top
+            this.sortCustomersByRecentMessage();
           } else {
             console.log('New customer, reloading customer list');
             // New customer, reload customer list
-            this.loadCustomers();
+            this.messageService.getCustomersWithMessages().subscribe({
+              next: (customers) => {
+                this.customers = customers;
+                this.sortCustomersByRecentMessage();
+              },
+              error: (error) => {
+                console.error('Error reloading customers:', error);
+              }
+            });
           }
         }
       },
@@ -165,7 +230,9 @@ export class MessagesComponent implements OnInit, OnDestroy {
           const customer = this.customers.find(c => c.id === this.selectedCustomer!.id);
           if (customer) {
             customer.lastMessage = message.content;
-            customer.lastMessageTime = message.timestamp;
+            customer.lastMessageTime = message.createdAt;
+            // Sort to move this customer to top
+            this.sortCustomersByRecentMessage();
           }
         }
       },
@@ -180,16 +247,47 @@ export class MessagesComponent implements OnInit, OnDestroy {
     return message.senderId === this.currentUserId;
   }
 
-  formatTime(timestamp: string): string {
-    const date = new Date(timestamp);
+  formatTime(timestamp: any): string {
+    if (!timestamp) {
+      console.log('No timestamp provided');
+      return '';
+    }
+    
+    console.log('Timestamp received:', timestamp, 'Type:', typeof timestamp, 'IsArray:', Array.isArray(timestamp));
+    
+    // Handle array format [year, month, day, hour, minute, second, nano]
+    let date: Date;
+    if (Array.isArray(timestamp)) {
+      const [year, month, day, hour = 0, minute = 0, second = 0] = timestamp;
+      console.log('Parsing array timestamp:', { year, month, day, hour, minute, second });
+      date = new Date(year, month - 1, day, hour, minute, second);
+    } else if (typeof timestamp === 'string') {
+      console.log('Parsing string timestamp:', timestamp);
+      date = new Date(timestamp);
+    } else if (typeof timestamp === 'object' && timestamp !== null) {
+      console.log('Timestamp is object:', timestamp);
+      // Try to handle object format
+      return '';
+    } else {
+      console.log('Unknown timestamp format');
+      return '';
+    }
+    
+    console.log('Parsed date:', date, 'Valid:', !isNaN(date.getTime()));
+    
+    if (isNaN(date.getTime())) {
+      return '';
+    }
+    
     const now = new Date();
     const diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60);
 
-    if (diffInHours < 24) {
-      return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-    } else {
-      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-    }
+    const formattedTime = diffInHours < 24 
+      ? date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
+      : date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+    
+    console.log('Formatted time:', formattedTime);
+    return formattedTime;
   }
 
   scrollToBottom(): void {

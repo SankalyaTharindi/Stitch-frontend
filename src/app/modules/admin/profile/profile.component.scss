@@ -1,8 +1,11 @@
 .page-container {
   display: flex;
-  min-height: 100vh;
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
   background: linear-gradient(135deg, rgba(45, 1, 12, .95), rgba(44, 1, 14, .95));
   color: #f8f5ff;
+  padding-top: 70px;
 }
 
 .profile-container {
@@ -10,6 +13,8 @@
   margin-left: 260px;
   padding: 32px 48px;
   max-width: 1200px;
+  height: calc(100vh - 70px);
+  overflow-y: auto;
   
   @media (max-width: 900px) {
     margin-left: 0;

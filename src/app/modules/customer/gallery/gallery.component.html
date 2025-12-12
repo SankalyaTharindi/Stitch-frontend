@@ -1,5 +1,26 @@
 <div class="customer-layout">
-  <app-shared-sidebar [title]="'Stitch'" [navItems]="customerNavItems"></app-shared-sidebar>
+  <!-- Fixed Top Bar -->
+  <div class="fixed-top-bar">
+    <div class="top-bar-left">
+      <button class="hamburger-btn" (click)="sidebar.toggleSidebar()" [class.active]="!sidebar.isCollapsed">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </button>
+      <h1 class="app-title">Stitch</h1>
+    </div>
+    <div class="top-bar-actions">
+      <button class="notification-btn" aria-label="View notifications">
+        <span class="material-icons">notifications</span>
+      </button>
+      <button class="book-appointment-btn" routerLink="/customer/book-appointment">
+        <span class="material-icons">add</span>
+        <span>Book Appointment</span>
+      </button>
+    </div>
+  </div>
+
+  <app-shared-sidebar #sidebar [title]="'Stitch'" [navItems]="customerNavItems"></app-shared-sidebar>
   
   <div class="gallery-container">
     <div class="page-header">

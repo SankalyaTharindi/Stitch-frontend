@@ -1,13 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AppointmentService, Appointment } from '../../../services/appointment.service';
+import { MessageService } from '../../../services/message.service';
 import { NavItem } from '../../../shared/components/sidebar/sidebar.component';
+import { interval, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-admin-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class AdminDashboardComponent implements OnInit {
+export class AdminDashboardComponent implements OnInit, OnDestroy {
   appointments: Appointment[] = [];
   filteredAppointments: Appointment[] = [];
   loading = true;
@@ -18,6 +20,7 @@ export class AdminDashboardComponent implements OnInit {
   currentImageIndex = 0;
   totalImages = 0;
   currentAppointmentId: number | null = null;
+  private refreshSubscription?: Subscription;
 
   // Bill upload properties
   showBillUploadModal: boolean = false;
@@ -44,10 +47,42 @@ export class AdminDashboardComponent implements OnInit {
     { value: 'COMPLETED', label: 'Completed' }
   ];
 
-  constructor(private appointmentService: AppointmentService) {}
+  constructor(
+    private appointmentService: AppointmentService,
+    private messageService: MessageService
+  ) {}
 
   ngOnInit(): void {
     this.loadAppointments();
+    this.loadUnreadMessageCount();
+    
+    // Subscribe to new messages for real-time updates
+    this.messageService.getNewMessages().subscribe(() => {
+      this.loadUnreadMessageCount();
+    });
+    
+    // Refresh unread count every 30 seconds as backup
+    this.refreshSubscription = interval(30000).subscribe(() => {
+      this.loadUnreadMessageCount();
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.refreshSubscription) {
+      this.refreshSubscription.unsubscribe();
+    }
+  }
+
+  loadUnreadMessageCount(): void {
+    this.messageService.getCustomersWithMessages().subscribe({
+      next: (customers) => {
+        const totalUnread = customers.reduce((sum, customer) => sum + (customer.unreadCount || 0), 0);
+        const messagesNavItem = this.adminNavItems.find(item => item.route === '/admin/messages');
+        if (messagesNavItem) {
+          messagesNavItem.badge = totalUnread > 0 ? totalUnread : undefined;
+        }
+      }
+    });
   }
 
   loadAppointments(): void {

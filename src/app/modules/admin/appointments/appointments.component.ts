@@ -1,20 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AppointmentService, Appointment } from '../../../services/appointment.service';
-
-interface NavItem {
-  label: string;
-  route: string;
-  icon: string;
-}
+import { MessageService } from '../../../services/message.service';
+import { NavItem } from '../../../shared/components/sidebar/sidebar.component';
+import { interval, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-appointments',
   templateUrl: './appointments.component.html',
   styleUrls: ['./appointments.component.scss']
 })
-export class AppointmentsComponent implements OnInit {
+export class AppointmentsComponent implements OnInit, OnDestroy {
   appointments: Appointment[] = [];
   loading: boolean = true;
+  private refreshSubscription?: Subscription;
 
   // Image modal properties
   showImageModal: boolean = false;
@@ -48,10 +46,41 @@ export class AppointmentsComponent implements OnInit {
     { label: 'Profile', route: '/admin/profile', icon: 'person' }
   ];
 
-  constructor(private appointmentService: AppointmentService) {}
+  constructor(
+    private appointmentService: AppointmentService,
+    private messageService: MessageService
+  ) {}
 
   ngOnInit(): void {
     this.loadAppointments();
+    this.loadUnreadMessageCount();
+    
+    // Subscribe to new messages for real-time updates
+    this.messageService.getNewMessages().subscribe(() => {
+      this.loadUnreadMessageCount();
+    });
+    
+    this.refreshSubscription = interval(30000).subscribe(() => {
+      this.loadUnreadMessageCount();
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.refreshSubscription) {
+      this.refreshSubscription.unsubscribe();
+    }
+  }
+
+  loadUnreadMessageCount(): void {
+    this.messageService.getCustomersWithMessages().subscribe({
+      next: (customers) => {
+        const totalUnread = customers.reduce((sum, customer) => sum + (customer.unreadCount || 0), 0);
+        const messagesNavItem = this.adminNavItems.find(item => item.route === '/admin/messages');
+        if (messagesNavItem) {
+          messagesNavItem.badge = totalUnread > 0 ? totalUnread : undefined;
+        }
+      }
+    });
   }
 
   loadAppointments(): void {

@@ -1,4 +1,9 @@
-<aside class="sidebar">
+<div class="sidebar-overlay" *ngIf="isMobile && !isCollapsed" (click)="toggleSidebar()"></div>
+
+<aside class="sidebar" [class.collapsed]="isCollapsed" [class.mobile]="isMobile">
+  <button *ngIf="isMobile && !isCollapsed" class="close-sidebar-btn" (click)="toggleSidebar()">
+    <span class="material-icons">close</span>
+  </button>
   <div class="sidebar-content">
     <h2 class="sidebar-title">{{ title }}</h2>
     <nav>
@@ -8,7 +13,8 @@
             [class.active]="isActive(item.route)" 
             (click)="navigate(item.route)">
           <span class="material-icons icon">{{ item.icon }}</span>
-          <span>{{ item.label }}</span>
+          <span class="nav-label">{{ item.label }}</span>
+          <span *ngIf="item.badge && item.badge > 0" class="nav-badge">{{ item.badge }}</span>
         </li>
       </ul>
     </nav>
@@ -16,7 +22,7 @@
   <div class="sidebar-footer">
     <button class="logout-btn" (click)="logout()">
       <span class="material-icons icon">logout</span>
-      <span>Logout</span>
+      <span class="logout-label">Logout</span>
     </button>
   </div>
 </aside>

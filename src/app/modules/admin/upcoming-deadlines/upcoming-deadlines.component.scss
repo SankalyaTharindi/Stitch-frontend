@@ -12,3 +12,159 @@
 .status-badge.status-pending{background:#fff3cd;color:#856404}
 .status-badge.status-approved{background:#d4edda;color:#155724}
 .status-badge.status-in_progress{background:#cfe2ff;color:#084298}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .section {
+    padding: 16px;
+  }
+
+  .section h2 {
+    font-size: 1.1rem;
+  }
+
+  .upcoming-deadlines .deadline-card {
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .deadline-info h4 {
+    font-size: 1rem;
+  }
+
+  .deadline-info p {
+    font-size: 0.85rem;
+  }
+
+  .status-badge {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .section {
+    padding: 12px;
+  }
+
+  .section h2 {
+    font-size: 1rem;
+  }
+
+  .upcoming-deadlines .deadline-card {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 12px;
+  }
+
+  .upcoming-deadlines .deadline-date {
+    flex-direction: row;
+    gap: 8px;
+    padding: 6px 12px;
+    min-width: auto;
+  }
+
+  .deadline-date .date {
+    font-size: 1.4rem;
+  }
+
+  .deadline-date .month {
+    font-size: 0.8rem;
+  }
+
+  .deadline-info {
+    width: 100%;
+  }
+
+  .deadline-info h4 {
+    font-size: 0.95rem;
+  }
+
+  .deadline-info p {
+    font-size: 0.8rem;
+  }
+
+  .status-badge {
+    position: static;
+    margin-top: 8px;
+    display: inline-block;
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .section {
+    padding: 16px;
+  }
+
+  .section h2 {
+    font-size: 1.1rem;
+  }
+
+  .upcoming-deadlines .deadline-card {
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .deadline-info h4 {
+    font-size: 1rem;
+  }
+
+  .deadline-info p {
+    font-size: 0.85rem;
+  }
+
+  .status-badge {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .section {
+    padding: 12px;
+  }
+
+  .section h2 {
+    font-size: 1rem;
+  }
+
+  .upcoming-deadlines .deadline-card {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 12px;
+  }
+
+  .upcoming-deadlines .deadline-date {
+    flex-direction: row;
+    gap: 8px;
+    padding: 6px 12px;
+    min-width: auto;
+  }
+
+  .deadline-date .date {
+    font-size: 1.4rem;
+  }
+
+  .deadline-date .month {
+    font-size: 0.8rem;
+  }
+
+  .deadline-info {
+    width: 100%;
+  }
+
+  .deadline-info h4 {
+    font-size: 0.95rem;
+  }
+
+  .deadline-info p {
+    font-size: 0.8rem;
+  }
+
+  .status-badge {
+    position: static;
+    margin-top: 8px;
+    display: inline-block;
+  }
+}

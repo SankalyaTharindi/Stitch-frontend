@@ -1,12 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { GalleryService, GalleryImage } from '../../../services/gallery.service';
+import { MessageService } from '../../../services/message.service';
+import { NavItem } from '../../../shared/components/sidebar/sidebar.component';
 import { interval, Subscription } from 'rxjs';
-
-interface NavItem {
-  label: string;
-  route: string;
-  icon: string;
-}
 
 @Component({
   selector: 'app-admin-gallery',
@@ -23,6 +19,7 @@ export class AdminGalleryComponent implements OnInit, OnDestroy {
   
   // Auto-refresh
   private refreshSubscription?: Subscription;
+  private messageRefreshSubscription?: Subscription;
   private readonly REFRESH_INTERVAL = 30000; // 30 seconds
   
   // Upload form
@@ -50,13 +47,40 @@ export class AdminGalleryComponent implements OnInit, OnDestroy {
     { label: 'Profile', route: '/admin/profile', icon: 'person' }
   ];
 
-  constructor(private galleryService: GalleryService) {}
+  constructor(
+    private galleryService: GalleryService,
+    private messageService: MessageService
+  ) {}
 
   ngOnInit(): void {
     this.loadImages();
-    // Auto-refresh every 30 seconds
+    this.loadUnreadMessageCount();
+    
+    // Subscribe to new messages for real-time updates
+    this.messageService.getNewMessages().subscribe(() => {
+      this.loadUnreadMessageCount();
+    });
+    
+    // Auto-refresh gallery every 30 seconds
     this.refreshSubscription = interval(this.REFRESH_INTERVAL).subscribe(() => {
       this.loadImages();
+    });
+    
+    // Auto-refresh message count every 30 seconds as backup
+    this.messageRefreshSubscription = interval(30000).subscribe(() => {
+      this.loadUnreadMessageCount();
+    });
+  }
+
+  loadUnreadMessageCount(): void {
+    this.messageService.getCustomersWithMessages().subscribe({
+      next: (customers) => {
+        const totalUnread = customers.reduce((sum, customer) => sum + (customer.unreadCount || 0), 0);
+        const messagesNavItem = this.adminNavItems.find(item => item.route === '/admin/messages');
+        if (messagesNavItem) {
+          messagesNavItem.badge = totalUnread > 0 ? totalUnread : undefined;
+        }
+      }
     });
   }
 
@@ -244,6 +268,9 @@ export class AdminGalleryComponent implements OnInit, OnDestroy {
     // Clean up auto-refresh subscription
     if (this.refreshSubscription) {
       this.refreshSubscription.unsubscribe();
+    }
+    if (this.messageRefreshSubscription) {
+      this.messageRefreshSubscription.unsubscribe();
     }
   }
 }

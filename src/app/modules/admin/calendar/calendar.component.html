@@ -1,5 +1,20 @@
 <div class="admin-layout">
-  <app-shared-sidebar [title]="'Stitch'" [navItems]="adminNavItems"></app-shared-sidebar>
+  <!-- Fixed Top Bar -->
+  <div class="fixed-top-bar">
+    <div class="top-bar-left">
+      <button class="hamburger-btn" (click)="sidebar.toggleSidebar()" [class.active]="!sidebar.isCollapsed">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </button>
+      <h1 class="app-title">Stitch</h1>
+    </div>
+    <button class="notification-btn" aria-label="View notifications">
+      <span class="material-icons">notifications</span>
+    </button>
+  </div>
+
+  <app-shared-sidebar #sidebar [title]="'Stitch'" [navItems]="adminNavItems"></app-shared-sidebar>
   
   <div class="calendar-container">
     <div class="page-header">
