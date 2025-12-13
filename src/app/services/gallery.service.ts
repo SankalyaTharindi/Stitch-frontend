@@ -60,7 +60,9 @@ export class GalleryService {
 
   // Customer: Toggle like
   toggleLike(id: number): Observable<number> {
-    return this.http.post<number>(`${this.API_URL}/gallery/${id}/like`, {});
+    return this.http.post<number>(`${this.API_URL}/gallery/${id}/like`, {}, {
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
 
   // Admin: Update gallery image details

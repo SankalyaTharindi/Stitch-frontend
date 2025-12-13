@@ -10,10 +10,7 @@
       <h1 class="app-title">Stitch</h1>
     </div>
     <div class="top-bar-actions">
-      <button class="notification-btn" aria-label="View notifications">
-        <span class="material-icons">notifications</span>
-        <span class="badge" *ngIf="appointments.length > 0">{{ appointments.length }}</span>
-      </button>
+      <app-notification-dropdown></app-notification-dropdown>
       <button class="book-appointment-btn" (click)="openBookingPopup()">
         <span class="material-icons">add</span>
         <span>Book Appointment</span>

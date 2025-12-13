@@ -1,32 +1,40 @@
 <div class="stats-grid">
   <div class="stat-card pending">
-    <div class="stat-icon"><span class="material-icons">hourglass_empty</span></div>
+    <div class="stat-card-top">
+      <div class="stat-icon"><span class="material-icons">hourglass_empty</span></div>
+      <h3 class="stat-count">{{ pendingCount }}</h3>
+    </div>
     <div class="stat-content">
-      <h3>{{ pendingCount }}</h3>
       <p>Pending Appointments</p>
     </div>
   </div>
 
   <div class="stat-card approved">
-    <div class="stat-icon"><span class="material-icons">verified</span></div>
+    <div class="stat-card-top">
+      <div class="stat-icon"><span class="material-icons">verified</span></div>
+      <h3 class="stat-count">{{ approvedCount }}</h3>
+    </div>
     <div class="stat-content">
-      <h3>{{ approvedCount }}</h3>
       <p>Approved Appointments</p>
     </div>
   </div>
 
   <div class="stat-card completed">
-    <div class="stat-icon"><span class="material-icons">done_all</span></div>
+    <div class="stat-card-top">
+      <div class="stat-icon"><span class="material-icons">done_all</span></div>
+      <h3 class="stat-count">{{ completedCount }}</h3>
+    </div>
     <div class="stat-content">
-      <h3>{{ completedCount }}</h3>
       <p>Completed Orders</p>
     </div>
   </div>
 
   <div class="stat-card total">
-    <div class="stat-icon"><span class="material-icons">calendar_month</span></div>
+    <div class="stat-card-top">
+      <div class="stat-icon"><span class="material-icons">calendar_month</span></div>
+      <h3 class="stat-count">{{ totalCount }}</h3>
+    </div>
     <div class="stat-content">
-      <h3>{{ totalCount }}</h3>
       <p>Total Appointments</p>
     </div>
   </div>

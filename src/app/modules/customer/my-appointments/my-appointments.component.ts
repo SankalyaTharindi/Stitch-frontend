@@ -24,7 +24,7 @@ export class MyAppointmentsComponent {
   }
 
   get pastAppointments(): Appointment[] {
-    return this.appointments.filter(apt => apt.status === 'COMPLETED');
+    return this.appointments.filter(apt => apt.status === 'COMPLETED' || apt.status === 'DECLINED');
   }
 
   onEdit(appointment: Appointment): void {
@@ -42,7 +42,8 @@ export class MyAppointmentsComponent {
       'PENDING': '#ffc107',
       'APPROVED': '#28a745',
       'IN_PROGRESS': '#17a2b8',
-      'COMPLETED': '#6c757d'
+      'COMPLETED': '#6c757d',
+      'DECLINED': '#dc3545'
     };
     return colors[status] || '#6c757d';
   }

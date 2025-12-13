@@ -91,28 +91,11 @@ export class CustomerGalleryComponent implements OnInit, OnDestroy {
     this.galleryService.getAllImages().subscribe({
       next: (data) => {
         this.images = data;
-        console.log('Loaded gallery images:', data);
-        // Load image blobs with authentication
-        this.images.forEach(image => {
-          this.loadImageBlob(image.fileName);
-        });
         this.loading = false;
       },
       error: (error) => {
         console.error('Error loading gallery images:', error);
         this.loading = false;
-      }
-    });
-  }
-
-  loadImageBlob(fileName: string): void {
-    this.galleryService.getImageBlob(fileName).subscribe({
-      next: (blob) => {
-        const url = URL.createObjectURL(blob);
-        this.imageUrls.set(fileName, url);
-      },
-      error: (error) => {
-        console.error('Error loading image blob:', fileName, error);
       }
     });
   }
@@ -144,11 +127,13 @@ export class CustomerGalleryComponent implements OnInit, OnDestroy {
   }
 
   getImageUrl(fileName: string): string {
-    return this.imageUrls.get(fileName) || '';
+    return this.galleryService.getImageUrl(fileName);
   }
 
   onImageError(event: any, image: GalleryImage): void {
-    console.error('Failed to load image:', image.fileName, 'URL:', this.getImageUrl(image.fileName));
+    console.error('Failed to load image:', image.fileName);
+    // Set a placeholder or default image if needed
+    event.target.src = 'assets/placeholder-image.jpg';
   }
 
   ngOnDestroy(): void {

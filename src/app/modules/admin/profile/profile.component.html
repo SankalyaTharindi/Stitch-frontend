@@ -9,9 +9,7 @@
       </button>
       <h1 class="app-title">Stitch</h1>
     </div>
-    <button class="notification-btn" aria-label="View notifications">
-      <span class="material-icons">notifications</span>
-    </button>
+    <app-notification-dropdown></app-notification-dropdown>
   </div>
 
   <app-shared-sidebar #sidebar [title]="'Stitch'" [navItems]="adminNavItems"></app-shared-sidebar>

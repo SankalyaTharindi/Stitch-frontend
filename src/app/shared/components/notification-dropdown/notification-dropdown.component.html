@@ -1,0 +1,40 @@
+<div class="notification-dropdown">
+  <button class="notification-btn" (click)="toggleDropdown()" aria-label="View notifications">
+    <span class="material-icons">notifications</span>
+    <span class="badge" *ngIf="unreadCount > 0">{{ unreadCount }}</span>
+  </button>
+
+  <div class="dropdown-panel" *ngIf="isOpen" (clickOutside)="closeDropdown()">
+    <div class="dropdown-header">
+      <h3>Notifications</h3>
+      <button 
+        class="mark-all-btn" 
+        *ngIf="unreadCount > 0"
+        (click)="markAllAsRead()"
+        title="Mark all as read">
+        <span class="material-icons">done_all</span>
+      </button>
+    </div>
+
+    <div class="notifications-list" *ngIf="notifications.length > 0">
+      <div 
+        *ngFor="let notification of notifications" 
+        class="notification-item"
+        [class.unread]="!notification.isRead"
+        (click)="handleNotificationClick(notification)">
+        <div class="notification-icon">
+          <span class="material-icons">{{ getNotificationIcon(notification.type) }}</span>
+        </div>
+        <div class="notification-content">
+          <p class="notification-message">{{ notification.message }}</p>
+          <span class="notification-time">{{ getTimeAgo(notification.createdAt) }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="notifications.length === 0">
+      <span class="material-icons">notifications_none</span>
+      <p>No notifications</p>
+    </div>
+  </div>
+</div>
